@@ -1,9 +1,15 @@
 package main
 
-import "log"
+import (
+	"log"
+	"net/http"
+)
 
 func main() {
-	if err := StartServer("8080"); err != nil {
+	http.Handle("/", http.FileServer(http.Dir("html")))
+
+	log.Println("Serveur lancé sur http://localhost:8080")
+	if err := http.ListenAndServe(":8080", nil); err != nil {
 		log.Fatal(err)
 	}
 }
