@@ -1,25 +1,30 @@
 import { createPrisoner, updatePrisoner, drawPrisoner } from "/js/prisoner.js";
 
+// Récupération du canvas et du contexte 2D
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
+// Paramètres principaux du jeu
 const keys = new Set();
-const groundY = 500;
-const gravity = 0.62;
+const groundY = 500; // hauteur du sol
+const gravity = 0.62; // gravité appliquée au prisonnier
 const prisoner = createPrisoner(groundY);
 
+// Décalage horizontal du monde + phase d'animation du soleil
 let worldOffset = 0;
 let sunPhase = 0; // pour animer le clignotement du soleil
 
+// Dessine un nuage simple à partir de 3 cercles
 function drawCloud(x, y, s) {
 	ctx.fillStyle = "#ffffff";
 	ctx.beginPath();
 	ctx.arc(x, y, 24 * s, 0, Math.PI * 2);
 	ctx.arc(x + 26 * s, y - 10 * s, 30 * s, 0, Math.PI * 2);
-	ctx.arc(x + 54 * s, y, 24 * s, 0, Math.PI * 2);
-	ctx.fill();
+ 	ctx.arc(x + 54 * s, y, 24 * s, 0, Math.PI * 2);
+ 	ctx.fill();
 }
 
+// Dessine une petite plante avec une fleur au bout
 function drawPlant(x, baseY) {
 	// petite tige
 	ctx.strokeStyle = "#2f7d32";
@@ -36,7 +41,7 @@ function drawPlant(x, baseY) {
 	ctx.ellipse(x + 4, baseY - 14, 6, 3, 0.6, 0, Math.PI * 2);
 	ctx.fill();
 
-	// fleur simple en haut
+ 	// fleur simple en haut
 	ctx.fillStyle = "#ffeb3b";
 	ctx.beginPath();
 	ctx.arc(x, baseY - 20, 4, 0, Math.PI * 2);
@@ -47,6 +52,7 @@ function drawPlant(x, baseY) {
 	ctx.fill();
 }
 
+// Dessine tout l'arrière-plan : ciel, soleil, nuages, collines, sol, plantes
 function drawBackground() {
 	ctx.fillStyle = "#6ec6ff";
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
