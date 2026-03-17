@@ -89,6 +89,32 @@ function drawPlant(x, baseY, variant) {
 	}
 }
 
+// Touffe d'herbe simple
+function drawGrassTuft(x, baseY) {
+	ctx.strokeStyle = "#357a38";
+	ctx.lineWidth = 2;
+	ctx.beginPath();
+	ctx.moveTo(x, baseY);
+	ctx.lineTo(x - 5, baseY - 10);
+	ctx.moveTo(x, baseY);
+	ctx.lineTo(x, baseY - 11);
+	ctx.moveTo(x, baseY);
+	ctx.lineTo(x + 5, baseY - 9);
+	ctx.stroke();
+}
+
+// Petit caillou arrondi
+function drawRock(x, baseY) {
+	ctx.fillStyle = "#8d6e63";
+	ctx.beginPath();
+	ctx.ellipse(x, baseY - 6, 10, 5, 0, 0, Math.PI * 2);
+	ctx.fill();
+	ctx.fillStyle = "#a1887f";
+	ctx.beginPath();
+	ctx.ellipse(x - 2, baseY - 7, 4, 2, 0, 0, Math.PI * 2);
+	ctx.fill();
+}
+
 // Dessine tout l'arrière-plan : ciel, soleil, nuages, collines, sol, plantes
 function drawBackground() {
 	ctx.fillStyle = "#6ec6ff";
@@ -157,6 +183,21 @@ function drawBackground() {
 			drawPlant(px, groundY, i);
 		}
 		i++;
+	}
+
+	// touffes d'herbe et cailloux alternés
+	const decoOffset = (worldOffset * 0.6) % 200;
+	let j = 0;
+	for (let x = 0; x < canvas.width + 80; x += 100) {
+		const dx = x - decoOffset;
+		if (dx > -30 && dx < canvas.width + 30) {
+			if (j % 2 === 0) {
+				drawGrassTuft(dx, groundY);
+			} else {
+				drawRock(dx, groundY);
+			}
+		}
+		j++;
 	}
 }
 
