@@ -24,9 +24,9 @@ function drawCloud(x, y, s) {
  	ctx.fill();
 }
 
-// Dessine une petite plante avec une fleur au bout
-function drawPlant(x, baseY) {
-	// petite tige
+// Dessine une petite plante avec une fleur au bout (plusieurs variantes)
+function drawPlant(x, baseY, variant) {
+	// tige
 	ctx.strokeStyle = "#2f7d32";
 	ctx.lineWidth = 3;
 	ctx.beginPath();
@@ -34,22 +34,59 @@ function drawPlant(x, baseY) {
 	ctx.lineTo(x, baseY - 18);
 	ctx.stroke();
 
-	// deux petites feuilles
+	// feuilles
 	ctx.fillStyle = "#4caf50";
 	ctx.beginPath();
 	ctx.ellipse(x - 4, baseY - 12, 6, 3, -0.6, 0, Math.PI * 2);
 	ctx.ellipse(x + 4, baseY - 14, 6, 3, 0.6, 0, Math.PI * 2);
 	ctx.fill();
 
- 	// fleur simple en haut
-	ctx.fillStyle = "#ffeb3b";
-	ctx.beginPath();
-	ctx.arc(x, baseY - 20, 4, 0, Math.PI * 2);
-	ctx.fill();
-	ctx.fillStyle = "#f44336";
-	ctx.beginPath();
-	ctx.arc(x, baseY - 20, 2, 0, Math.PI * 2);
-	ctx.fill();
+	// différentes fleurs en haut selon la variante
+	switch (variant % 3) {
+		case 0:
+			// fleur jaune / rouge (comme avant)
+			ctx.fillStyle = "#ffeb3b";
+			ctx.beginPath();
+			ctx.arc(x, baseY - 20, 4, 0, Math.PI * 2);
+			ctx.fill();
+			ctx.fillStyle = "#f44336";
+			ctx.beginPath();
+			ctx.arc(x, baseY - 20, 2, 0, Math.PI * 2);
+			ctx.fill();
+			break;
+		case 1:
+			// petite marguerite blanche
+			ctx.fillStyle = "#ffffff";
+			for (let a = 0; a < Math.PI * 2; a += Math.PI / 4) {
+				ctx.beginPath();
+				ctx.ellipse(
+					x + Math.cos(a) * 3,
+					baseY - 20 + Math.sin(a) * 3,
+					3,
+					1.5,
+					a,
+					0,
+					Math.PI * 2
+				);
+				ctx.fill();
+			}
+			ctx.fillStyle = "#ffeb3b";
+			ctx.beginPath();
+			ctx.arc(x, baseY - 20, 2, 0, Math.PI * 2);
+			ctx.fill();
+			break;
+		case 2:
+			// fleur violette
+			ctx.fillStyle = "#ba68c8";
+			ctx.beginPath();
+			ctx.arc(x, baseY - 20, 4, 0, Math.PI * 2);
+			ctx.fill();
+			ctx.fillStyle = "#7b1fa2";
+			ctx.beginPath();
+			ctx.arc(x, baseY - 20, 1.8, 0, Math.PI * 2);
+			ctx.fill();
+			break;
+	}
 }
 
 // Dessine tout l'arrière-plan : ciel, soleil, nuages, collines, sol, plantes
@@ -111,13 +148,15 @@ function drawBackground() {
 		ctx.strokeRect(x - tileOffset, groundY, 48, 48);
 	}
 
-	// petites plantes et fleurs sur le sol
+	// petites plantes et fleurs variées sur le sol
 	const plantOffset = (worldOffset * 0.8) % 160;
+	let i = 0;
 	for (let x = -40; x < canvas.width + 40; x += 80) {
 		const px = x - plantOffset + 24; // légèrement décalé par rapport aux tuiles
 		if (px > -20 && px < canvas.width + 20) {
-			drawPlant(px, groundY);
+			drawPlant(px, groundY, i);
 		}
+		i++;
 	}
 }
 
