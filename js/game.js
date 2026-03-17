@@ -9,6 +9,7 @@ const gravity = 0.62;
 const prisoner = createPrisoner(groundY);
 
 let worldOffset = 0;
+let sunPhase = 0; // pour animer le clignotement du soleil
 
 function drawCloud(x, y, s) {
 	ctx.fillStyle = "#ffffff";
@@ -23,6 +24,29 @@ function drawBackground() {
 	ctx.fillStyle = "#6ec6ff";
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+	// Soleil (taille moyenne, en haut, loin des nuages) qui clignote
+	const sunX = 120;
+	const sunY = 40;
+	const baseRadius = 30;
+	const blink = (Math.sin(sunPhase) + 1) / 2; // 0 → 1
+	const sunRadius = baseRadius * (0.8 + 0.4 * blink); // variation douce de taille
+	const sunGradient = ctx.createRadialGradient(
+		sunX - 10,
+		sunY - 10,
+		6,
+		sunX,
+		sunY,
+		sunRadius
+	);
+	sunGradient.addColorStop(0, "#fffde7");
+	sunGradient.addColorStop(0.4, "#ffe082");
+	sunGradient.addColorStop(1, "#ffca28");
+	ctx.save();
+	ctx.fillStyle = sunGradient;
+	ctx.beginPath();
+	ctx.arc(sunX, sunY, sunRadius, 0, Math.PI * 2);
+	ctx.fill();
+	ctx.restore();
 	ctx.fillStyle = "#95dbff";
 	ctx.fillRect(0, 300, canvas.width, 200);
 
@@ -58,6 +82,7 @@ function drawBackground() {
 function update() {
 	updatePrisoner(prisoner, keys, groundY, gravity);
 	worldOffset += prisoner.vx;
+ 	sunPhase += 0.08; // vitesse du clignotement
 }
 
 function loop() {
