@@ -20,6 +20,33 @@ function drawCloud(x, y, s) {
 	ctx.fill();
 }
 
+function drawPlant(x, baseY) {
+	// petite tige
+	ctx.strokeStyle = "#2f7d32";
+	ctx.lineWidth = 3;
+	ctx.beginPath();
+	ctx.moveTo(x, baseY);
+	ctx.lineTo(x, baseY - 18);
+	ctx.stroke();
+
+	// deux petites feuilles
+	ctx.fillStyle = "#4caf50";
+	ctx.beginPath();
+	ctx.ellipse(x - 4, baseY - 12, 6, 3, -0.6, 0, Math.PI * 2);
+	ctx.ellipse(x + 4, baseY - 14, 6, 3, 0.6, 0, Math.PI * 2);
+	ctx.fill();
+
+	// fleur simple en haut
+	ctx.fillStyle = "#ffeb3b";
+	ctx.beginPath();
+	ctx.arc(x, baseY - 20, 4, 0, Math.PI * 2);
+	ctx.fill();
+	ctx.fillStyle = "#f44336";
+	ctx.beginPath();
+	ctx.arc(x, baseY - 20, 2, 0, Math.PI * 2);
+	ctx.fill();
+}
+
 function drawBackground() {
 	ctx.fillStyle = "#6ec6ff";
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -76,6 +103,15 @@ function drawBackground() {
 		ctx.fillRect(x - tileOffset, groundY, 48, 48);
 		ctx.strokeStyle = "#5e3a20";
 		ctx.strokeRect(x - tileOffset, groundY, 48, 48);
+	}
+
+	// petites plantes et fleurs sur le sol
+	const plantOffset = (worldOffset * 0.8) % 160;
+	for (let x = -40; x < canvas.width + 40; x += 80) {
+		const px = x - plantOffset + 24; // légèrement décalé par rapport aux tuiles
+		if (px > -20 && px < canvas.width + 20) {
+			drawPlant(px, groundY);
+		}
 	}
 }
 
