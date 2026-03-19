@@ -166,14 +166,5 @@ export function createPrisonBackgroundRenderer(ctx, canvas, groundY, scene) {
 		drawPrisonComplex();
 		drawPoliceLights();
 		drawGround();
-
-		ctx.fillStyle = "rgba(8, 12, 20, 0.58)";
-		ctx.fillRect(14, 14, 250, 34);
-		ctx.strokeStyle = "rgba(147, 188, 238, 0.8)";
-		ctx.lineWidth = 1;
-		ctx.strokeRect(14, 14, 250, 34);
-		ctx.fillStyle = "#d8ecff";
-		ctx.font = "bold 16px Arial";
-		ctx.fillText("PRISON SCENE v2 ACTIVE", 24, 36);
 	};
 }
