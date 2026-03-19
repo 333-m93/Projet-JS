@@ -10,8 +10,8 @@ export function createLevel1(groundY) {
 		{ x: 3110, y: groundY - 120, w: 90, h: 16, type: "catwalk" },
 		{ x: 3400, y: groundY - 150, w: 88, h: 16, type: "catwalk" },
 		{ x: 3700, y: groundY - 126, w: 92, h: 16, type: "catwalk" },
-		{ x: 4120, y: groundY - 34, w: 88, h: 34, type: "barrier", safe: true },
-		{ x: 4520, y: groundY - 50, w: 64, h: 50, type: "concrete", safe: true },
+		{ x: 4120, y: groundY - 34, w: 88, h: 34, type: "barrier" },
+		{ x: 4520, y: groundY - 50, w: 64, h: 50, type: "concrete" },
 	];
 
 	const hazards = [
@@ -29,7 +29,7 @@ export function createLevel1(groundY) {
 	return {
 		name: "Niveau 1 - Evasion: Initiation",
 		length: 5600,
-		checkpoints: [0, 1500, 2800, 4100, 5000],
+		checkpoints: [0, 1500, 2800, 3850, 5000],
 		hazards,
 		finish: {
 			x: 4680,
