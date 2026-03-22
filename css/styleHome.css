@@ -1,0 +1,16 @@
+h1{
+  background: linear-gradient(90deg, #4cc9ff, #003b80);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+
+body{
+    background-color: navy;
+}
+
+img{
+    margin: center;
+    border-radius: 40px 40px 40px 40px;
+}
