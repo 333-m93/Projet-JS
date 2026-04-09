@@ -25,6 +25,35 @@ export function createLevel1(groundY) {
 		{ id: "l1-flash", x: 3270, y: groundY - 138, w: 30, h: 30, type: "flashlight", label: "Une lampe de poche", story: "La lampe marche encore. La fuite commence a ressembler a un vrai plan." },
 	];
 
+	const locks = [
+		{
+			id: "l1-dark-passage",
+			x: 3890,
+			y: groundY - 136,
+			w: 34,
+			h: 136,
+			type: "door",
+			label: "Couloir obscur",
+			requiredItemId: "l1-flash",
+			requiredItemLabel: "la lampe de poche",
+			lockedText: "Le couloir est trop sombre. La lampe de poche te permettrait d'avancer sans tomber.",
+			successText: "La lampe eclaire le passage. Tu reperes enfin la porte de service.",
+		},
+		{
+			id: "l1-service-door",
+			x: 3988,
+			y: groundY - 150,
+			w: 34,
+			h: 150,
+			type: "door",
+			label: "Porte de service",
+			requiredItemId: "l1-key",
+			requiredItemLabel: "la cle de service",
+			lockedText: "La porte de service est fermee. Il te faut la cle de service.",
+			successText: "La cle tourne. La porte de service s'ouvre vers la zone securisee.",
+		},
+	];
+
 	for (const obstacle of obstacles) {
 		obstacle.solid = true;
 		if (obstacle.type !== "catwalk") {
@@ -41,6 +70,7 @@ export function createLevel1(groundY) {
 		checkpoints: [0, 650, 1150, 1650, 2150, 2650, 3150, 3600, 3925],
 		hazards,
 		items,
+		locks,
 		finish: {
 			x: 4140,
 			y: groundY - 118,

@@ -148,6 +148,31 @@ function drawFinishGate(ctx, scene, level) {
 	ctx.fillRect(x + gate.w - 22, y + 8, 12, 6);
 }
 
+function drawLock(ctx, lock, x, y, unlocked) {
+	if (lock.type === "door") {
+		ctx.fillStyle = unlocked ? "#315b36" : "#5b2d2d";
+		ctx.fillRect(x, y, lock.w, lock.h);
+		ctx.strokeStyle = unlocked ? "#9be3a5" : "#f0a1a1";
+		ctx.lineWidth = 2;
+		ctx.strokeRect(x, y, lock.w, lock.h);
+		ctx.fillStyle = unlocked ? "#c9ffd2" : "#ffe0a8";
+		ctx.fillRect(x + lock.w - 16, y + lock.h / 2 - 4, 6, 8);
+		return;
+	}
+
+	ctx.strokeStyle = unlocked ? "#a4ffbe" : "#d8dde4";
+	ctx.lineWidth = 3;
+	for (let i = 0; i < lock.w; i += 14) {
+		ctx.beginPath();
+		ctx.moveTo(x + i + 2, y);
+		ctx.lineTo(x + i + 2, y + lock.h);
+		ctx.stroke();
+	}
+	ctx.strokeStyle = unlocked ? "#6fd08b" : "#8a98a8";
+	ctx.lineWidth = 2;
+	ctx.strokeRect(x, y, lock.w, lock.h);
+}
+
 function drawStoryItem(ctx, item, x, y, sceneTime) {
 	const bob = Math.sin(sceneTime * 0.08 + x * 0.01) * 3;
 	const drawY = y + bob;
@@ -284,9 +309,29 @@ function drawItems(ctx, scene, canvas, level) {
 	}
 }
 
+function drawLocks(ctx, scene, canvas, level) {
+	for (const lock of level.locks || []) {
+		const x = lock.x - scene.worldOffset;
+		if (x + lock.w < -80 || x > canvas.width + 80) {
+			continue;
+		}
+		drawLock(ctx, lock, x, lock.y, scene.unlockedLockIds.has(lock.id));
+
+		if (!scene.unlockedLockIds.has(lock.id)) {
+			ctx.fillStyle = "#ffdca8";
+			ctx.font = "bold 10px Arial";
+			ctx.textAlign = "center";
+			ctx.fillText(lock.label || "Verrou", x + lock.w / 2, lock.y - 10);
+		}
+	}
+}
+
 function drawStoryHud(ctx, scene, canvas, level) {
 	const totalItems = (level.items || []).length;
 	const collectedItems = totalItems === 0 ? 0 : (level.items || []).filter((item) => scene.collectedItemIds.has(item.id)).length;
+	const collectedLabels = (level.items || [])
+		.filter((item) => scene.collectedItemIds.has(item.id))
+		.map((item) => item.label);
 	const progress = Math.max(0, Math.min(1, scene.worldOffset / (level.length - canvas.width)));
 	const barX = 14;
 	const barY = 54;
@@ -310,9 +355,9 @@ function drawStoryHud(ctx, scene, canvas, level) {
 	ctx.fillRect(barX + 2, barY + 2, (barW - 4) * progress, 14);
 
 	ctx.fillStyle = "rgba(8, 12, 20, 0.58)";
-	ctx.fillRect(canvas.width - 248, 18, 230, 66);
+	ctx.fillRect(canvas.width - 248, 18, 230, 84);
 	ctx.strokeStyle = "rgba(147, 188, 238, 0.75)";
-	ctx.strokeRect(canvas.width - 248, 18, 230, 66);
+	ctx.strokeRect(canvas.width - 248, 18, 230, 84);
 
 	ctx.fillStyle = "#dff2ff";
 	ctx.font = "bold 12px Arial";
@@ -320,6 +365,11 @@ function drawStoryHud(ctx, scene, canvas, level) {
 	ctx.fillStyle = "#a9d4ff";
 	ctx.font = "13px Arial";
 	ctx.fillText(`${collectedItems} / ${totalItems}`, canvas.width - 232, 61);
+	if (collectedLabels.length > 0) {
+		ctx.fillStyle = "#d7ebff";
+		ctx.font = "11px Arial";
+		drawWrappedText(ctx, collectedLabels.join(" - "), canvas.width - 232, 78, 200, 15);
+	}
 
 	if (scene.storyToast) {
 		ctx.fillStyle = "rgba(6, 12, 18, 0.76)";
@@ -380,6 +430,7 @@ export function drawLevel1(ctx, scene, canvas, level) {
 	}
 
 	drawItems(ctx, scene, canvas, level);
+	drawLocks(ctx, scene, canvas, level);
 	drawFinishGate(ctx, scene, level);
 	drawStoryHud(ctx, scene, canvas, level);
 

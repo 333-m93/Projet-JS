@@ -13,8 +13,9 @@ export function createLevel2(groundY) {
 		{ x: 3400, y: groundY - 102, w: 134, h: 16, type: "catwalk" },
 		{ x: 3680, y: groundY - 116, w: 130, h: 16, type: "catwalk" },
 		{ x: 3950, y: groundY - 98, w: 136, h: 16, type: "catwalk" },
-		{ x: 4280, y: groundY - 34, w: 80, h: 34, type: "concrete" },
-		{ x: 4480, y: groundY - 24, w: 96, h: 24, type: "barrier" },
+		{ x: 4240, y: groundY - 86, w: 134, h: 16, type: "catwalk" },
+		{ x: 4460, y: groundY - 74, w: 150, h: 16, type: "catwalk" },
+		{ x: 4700, y: groundY - 24, w: 80, h: 24, type: "concrete" },
 	];
 
 	const hazards = [
@@ -28,6 +29,48 @@ export function createLevel2(groundY) {
 		{ id: "l2-radio", x: 980, y: groundY - 82, w: 32, h: 26, type: "radio", label: "Un talkie brouille", story: "Tu entends des gardes parler d'une porte technique au fond du bloc B." },
 		{ id: "l2-map", x: 2660, y: groundY - 126, w: 30, h: 30, type: "map", label: "Un plan du bloc B", story: "Le plan confirme un couloir de maintenance mene a la tour exterieure." },
 		{ id: "l2-card", x: 3730, y: groundY - 162, w: 28, h: 28, type: "card", label: "Un badge magnetique", story: "Tu glisses le badge dans ta poche. C'est peut-etre la piece manquante." },
+	];
+
+	const locks = [
+		{
+			id: "l2-console",
+			x: 4380,
+			y: groundY - 120,
+			w: 34,
+			h: 120,
+			type: "door",
+			label: "Console codee",
+			requiredItemId: "l2-radio",
+			requiredItemLabel: "le talkie brouille",
+			lockedText: "La console demande un code. Le talkie brouille contient peut-etre la frequence utile.",
+			successText: "Tu reproduis le code entendu au talkie. Le sas technique se deverrouille.",
+		},
+		{
+			id: "l2-maintenance-hatch",
+			x: 4515,
+			y: groundY - 148,
+			w: 34,
+			h: 148,
+			type: "door",
+			label: "Trappe technique",
+			requiredItemId: "l2-map",
+			requiredItemLabel: "le plan du bloc B",
+			lockedText: "Plusieurs acces se ressemblent. Le plan du bloc B t'aiderait a choisir la bonne trappe.",
+			successText: "Le plan te mene au bon acces de maintenance, juste avant la porte finale.",
+		},
+		{
+			id: "l2-tech-door",
+			x: 4650,
+			y: groundY - 164,
+			w: 38,
+			h: 164,
+			type: "door",
+			label: "Porte technique",
+			requiredItemId: "l2-card",
+			requiredItemLabel: "le badge magnetique",
+			lockedText: "Le lecteur clignote rouge. Il te faut le badge magnetique.",
+			successText: "Le badge ouvre la porte technique. Le passage vers la tour est libre.",
+		},
 	];
 
 	for (const obstacle of obstacles) {
@@ -46,17 +89,18 @@ export function createLevel2(groundY) {
 		checkpoints: [0, 700, 1300, 1900, 2500, 3100, 3700, 4250, 4550],
 		hazards,
 		items,
+		locks,
 		finish: {
-			x: 4760,
+			x: 4885,
 			y: groundY - 126,
 			w: 130,
 			h: 126,
 		},
 		finishTrigger: {
-			x: 4720,
-			y: groundY - 220,
-			w: 260,
-			h: 250,
+			x: 4840,
+			y: groundY - 210,
+			w: 220,
+			h: 240,
 		},
 		obstacles,
 		winTitle: "PORTE TECHNIQUE OUVERTE",

@@ -43,6 +43,15 @@ export function getHazardRect(hazard, worldOffset) {
 	};
 }
 
+export function getLockRect(lock, worldOffset) {
+	return {
+		x: lock.x - worldOffset,
+		y: lock.y,
+		w: lock.w,
+		h: lock.h,
+	};
+}
+
 export function ensureSceneLevelState(scene) {
 	if (typeof scene.checkpointOffset !== "number") {
 		scene.checkpointOffset = 0;
@@ -61,6 +70,9 @@ export function ensureSceneLevelState(scene) {
 	}
 	if (!(scene.collectedItemIds instanceof Set)) {
 		scene.collectedItemIds = new Set();
+	}
+	if (!(scene.unlockedLockIds instanceof Set)) {
+		scene.unlockedLockIds = new Set();
 	}
 	if (typeof scene.storyToast !== "string") {
 		scene.storyToast = "";

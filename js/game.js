@@ -65,6 +65,7 @@ function startLevel(index) {
 	scene.levelWinTimer = 0;
 	scene.resetFlash = 0;
 	scene.collectedItemIds = new Set();
+	scene.unlockedLockIds = new Set();
 	scene.storyToast = "";
 	scene.storyToastTimer = 0;
 	scene.levelIntroTimer = 420;

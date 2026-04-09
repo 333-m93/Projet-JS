@@ -18,6 +18,7 @@ export const scene = {
 	levelWinTimer: 0,
 	resetFlash: 0,
 	collectedItemIds: new Set(),
+	unlockedLockIds: new Set(),
 	storyToast: "",
 	storyToastTimer: 0,
 	levelIntroTimer: 0,

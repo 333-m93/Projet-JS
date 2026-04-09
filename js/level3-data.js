@@ -13,21 +13,64 @@ export function createLevel3(groundY) {
 		{ x: 3480, y: groundY - 132, w: 134, h: 16, type: "catwalk", safe: true, motion: { axis: "y", amplitude: 10, speed: 0.04, phase: 0.8 } },
 		{ x: 3760, y: groundY - 112, w: 138, h: 16, type: "catwalk" },
 		{ x: 4060, y: groundY - 94, w: 140, h: 16, type: "catwalk" },
-		{ x: 4250, y: groundY - 40, w: 82, h: 40, type: "concrete" },
-		{ x: 4540, y: groundY - 24, w: 112, h: 24, type: "barrier" },
+		{ x: 4310, y: groundY - 102, w: 140, h: 16, type: "catwalk" },
+		{ x: 4540, y: groundY - 118, w: 140, h: 16, type: "catwalk" },
+		{ x: 4790, y: groundY - 24, w: 90, h: 24, type: "concrete" },
 	];
 
 	const hazards = [
 		{ x: 1360, y: groundY - 20, w: 320, h: 40, phase: 0.3 },
 		{ x: 2280, y: groundY - 20, w: 560, h: 40, phase: 1.2 },
 		{ x: 3200, y: groundY - 20, w: 420, h: 40, phase: 2.1 },
-		{ x: 4300, y: groundY - 20, w: 260, h: 40, phase: 2.9 },
+		{ x: 4300, y: groundY - 20, w: 140, h: 40, phase: 2.9 },
 	];
 
 	const items = [
 		{ id: "l3-cutter", x: 1290, y: groundY - 96, w: 30, h: 30, type: "cutter", label: "Une pince coupante", story: "Avec cette pince, les derniers grillages ne te retiendront pas longtemps." },
 		{ id: "l3-uniform", x: 3010, y: groundY - 178, w: 32, h: 32, type: "uniform", label: "Une veste de garde", story: "Tu enfiles une veste oubliee dans la tour. De loin, tu peux presque passer inapercu." },
 		{ id: "l3-route", x: 4080, y: groundY - 144, w: 32, h: 32, type: "route", label: "Le plan des egouts", story: "Le dernier indice montre une sortie derriere la tour, au dela des projecteurs." },
+	];
+
+	const locks = [
+		{
+			id: "l3-checkpoint-gate",
+			x: 4485,
+			y: groundY - 154,
+			w: 38,
+			h: 154,
+			type: "door",
+			label: "Controle garde",
+			requiredItemId: "l3-uniform",
+			requiredItemLabel: "la veste de garde",
+			lockedText: "Le dernier poste de controle est trop expose. La veste de garde pourrait t'aider a passer.",
+			successText: "Avec la veste de garde, tu franchis le controle sans alerter la tour.",
+		},
+		{
+			id: "l3-hatch",
+			x: 4638,
+			y: groundY - 132,
+			w: 36,
+			h: 132,
+			type: "door",
+			label: "Trappe egout",
+			requiredItemId: "l3-route",
+			requiredItemLabel: "le plan des egouts",
+			lockedText: "Sans le plan, impossible de savoir quelle trappe mene vraiment dehors.",
+			successText: "Le plan confirme la bonne trappe. Tu t'engages vers la sortie.",
+		},
+		{
+			id: "l3-fence",
+			x: 4720,
+			y: groundY - 166,
+			w: 42,
+			h: 166,
+			type: "fence",
+			label: "Grillage final",
+			requiredItemId: "l3-cutter",
+			requiredItemLabel: "la pince coupante",
+			lockedText: "Le grillage final bloque la fuite. Il te faut la pince coupante.",
+			successText: "Tu coupes le grillage. La route vers la sortie finale est ouverte.",
+		},
 	];
 
 	for (const obstacle of obstacles) {
@@ -46,17 +89,18 @@ export function createLevel3(groundY) {
 		checkpoints: [0, 800, 1500, 2200, 2900, 3500, 4100, 4650, 5000],
 		hazards,
 		items,
+		locks,
 		finish: {
-			x: 4870,
+			x: 5000,
 			y: groundY - 150,
 			w: 150,
 			h: 150,
 		},
 		finishTrigger: {
-			x: 4800,
-			y: groundY - 240,
-			w: 320,
-			h: 300,
+			x: 4950,
+			y: groundY - 220,
+			w: 230,
+			h: 260,
 		},
 		obstacles,
 		winTitle: "LIBERTE",
