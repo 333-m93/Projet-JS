@@ -2,6 +2,7 @@ import {
 	clamp,
 	ensureSceneLevelState,
 	getHazardRect,
+	getLockCollisionRect,
 	getLockRect,
 	getScreenRect,
 	intersects,
@@ -124,7 +125,7 @@ export function applyLevel1Collisions(prisoner, scene, canvas, level, groundY, p
 		if (scene.unlockedLockIds.has(lock.id)) {
 			continue;
 		}
-		const rect = getLockRect(lock, nextOffset);
+		const rect = getLockCollisionRect(lock, nextOffset);
 		if (!intersects(playerRect, rect)) {
 			continue;
 		}
@@ -169,7 +170,7 @@ export function applyLevel1Collisions(prisoner, scene, canvas, level, groundY, p
 		if (scene.unlockedLockIds.has(lock.id)) {
 			continue;
 		}
-		const rect = getLockRect(lock, nextOffset);
+		const rect = getLockCollisionRect(lock, nextOffset);
 		const verticalOverlap = prisoner.y + prisoner.h > rect.y + 4 && prisoner.y < rect.y + rect.h - 4;
 		if (!verticalOverlap) {
 			continue;

@@ -52,6 +52,20 @@ export function getLockRect(lock, worldOffset) {
 	};
 }
 
+export function getLockCollisionRect(lock, worldOffset) {
+	const rect = getLockRect(lock, worldOffset);
+	if (!lock.sealedTop) {
+		return rect;
+	}
+
+	return {
+		x: rect.x,
+		y: 0,
+		w: rect.w,
+		h: rect.y + rect.h,
+	};
+}
+
 export function ensureSceneLevelState(scene) {
 	if (typeof scene.checkpointOffset !== "number") {
 		scene.checkpointOffset = 0;
