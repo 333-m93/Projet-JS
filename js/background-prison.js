@@ -1,6 +1,6 @@
 export function createPrisonBackgroundRenderer(ctx, canvas, groundY, scene) {
 	function drawOpeningCell() {
-		const progress = 1 - Math.min(1, scene.startSequenceTimer / 120);
+		const progress = 1 - Math.min(1, scene.startSequenceTimer / 220);
 		const cellX = 34;
 		const cellY = groundY - 176;
 		const cellW = 150;
@@ -41,6 +41,33 @@ export function createPrisonBackgroundRenderer(ctx, canvas, groundY, scene) {
 
 		ctx.fillStyle = `rgba(165, 212, 255, ${0.16 + progress * 0.12})`;
 		ctx.fillRect(cellX + 86, cellY, 64 + doorSlide, cellH);
+	}
+
+	function drawFreedomOutside() {
+		const road = ctx.createLinearGradient(0, groundY - 10, 0, canvas.height);
+		road.addColorStop(0, "#2b2f34");
+		road.addColorStop(1, "#101317");
+		ctx.fillStyle = road;
+		ctx.fillRect(0, groundY - 10, canvas.width, canvas.height - groundY + 10);
+
+		ctx.fillStyle = "#26352f";
+		for (let i = -1; i < 4; i += 1) {
+			const baseX = i * 360 - (scene.worldOffset * 0.14) % 360;
+			ctx.beginPath();
+			ctx.moveTo(baseX, groundY);
+			ctx.quadraticCurveTo(baseX + 180, 360, baseX + 360, groundY);
+			ctx.closePath();
+			ctx.fill();
+		}
+
+		ctx.strokeStyle = "rgba(245, 233, 175, 0.65)";
+		ctx.lineWidth = 4;
+		for (let x = -120; x < canvas.width + 120; x += 140) {
+			ctx.beginPath();
+			ctx.moveTo(x - (scene.worldOffset * 0.5) % 140, groundY + 54);
+			ctx.lineTo(x + 56 - (scene.worldOffset * 0.5) % 140, groundY + 54);
+			ctx.stroke();
+		}
 	}
 
 	function drawSearchlight(originX, originY, beamLength, spread, drift, tint) {
@@ -255,7 +282,11 @@ export function createPrisonBackgroundRenderer(ctx, canvas, groundY, scene) {
 		} else if (chapter === "Chapitre 2") {
 			drawInteriorBlock();
 		} else if (chapter === "Chapitre 3") {
-			drawEscapeYard();
+			if (scene.levelWon) {
+				drawFreedomOutside();
+			} else {
+				drawEscapeYard();
+			}
 		} else {
 			drawPrisonComplex();
 		}

@@ -71,7 +71,7 @@ function startLevel(index) {
 	scene.storyToast = "";
 	scene.storyToastTimer = 0;
 	scene.levelIntroTimer = 420;
-	scene.startSequenceTimer = index === 0 ? 120 : 0;
+	scene.startSequenceTimer = index === 0 ? 220 : 0;
 
 	prisoner.x = index === 0 ? 122 : 180;
 	prisoner.y = groundY - prisoner.h;
