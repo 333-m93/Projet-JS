@@ -15,8 +15,8 @@ export function createLevel1(groundY) {
 	];
 
 	const hazards = [
-		{ x: 2000, y: groundY - 20, w: 500, h: 40, phase: 0 },
-		{ x: 2850, y: groundY - 20, w: 520, h: 40, phase: 1.2 },
+		{ x: 1980, y: groundY - 20, w: 540, h: 40, phase: 0 },
+		{ x: 2820, y: groundY - 20, w: 560, h: 40, phase: 1.2 },
 	];
 
 	const items = [
@@ -68,8 +68,17 @@ export function createLevel1(groundY) {
 		chapter: "Chapitre 1",
 		objective: "Sors du bloc initial et recupere de quoi preparer ton evasion.",
 		introText: "Tu profites d'une ronde plus calme pour quitter ta cellule et traverser la cour.",
+		theme: {
+			accent: "#8ec5ff",
+			accentSoft: "rgba(142, 197, 255, 0.28)",
+			danger: "#ff7272",
+			dangerSoft: "rgba(255, 114, 114, 0.22)",
+			lockClosed: "#6f3131",
+			lockOpen: "#326147",
+			finishLabel: "PORTE DE COUR",
+		},
 		length: 5100,
-		checkpoints: [0, 650, 1150, 1650, 2150, 2650, 3150, 3600, 3925],
+		checkpoints: [0, 650, 1150, 1650, 2150, 2650, 3150, 3575, 3925],
 		hazards,
 		items,
 		locks,

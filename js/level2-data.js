@@ -6,10 +6,10 @@ export function createLevel2(groundY) {
 		{ x: 1580, y: groundY - 78, w: 132, h: 16, type: "catwalk" },
 		{ x: 1820, y: groundY - 98, w: 126, h: 16, type: "catwalk" },
 		{ x: 2070, y: groundY - 84, w: 132, h: 16, type: "catwalk" },
-		{ x: 2330, y: groundY - 64, w: 134, h: 16, type: "catwalk", safe: true, motion: { axis: "y", amplitude: 10, speed: 0.035, phase: 0.2 } },
-		{ x: 2600, y: groundY - 82, w: 132, h: 16, type: "catwalk", safe: true, motion: { axis: "x", amplitude: 14, speed: 0.03, phase: 1.1 } },
-		{ x: 2860, y: groundY - 100, w: 128, h: 16, type: "catwalk", safe: true, motion: { axis: "y", amplitude: 10, speed: 0.04, phase: 2.4 } },
-		{ x: 3130, y: groundY - 118, w: 126, h: 16, type: "catwalk", safe: true, motion: { axis: "x", amplitude: 12, speed: 0.045, phase: 0.9 } },
+		{ x: 2330, y: groundY - 64, w: 134, h: 16, type: "catwalk", safe: true, motion: { axis: "y", amplitude: 12, speed: 0.038, phase: 0.2 } },
+		{ x: 2600, y: groundY - 82, w: 132, h: 16, type: "catwalk", safe: true, motion: { axis: "x", amplitude: 16, speed: 0.034, phase: 1.1 } },
+		{ x: 2860, y: groundY - 100, w: 128, h: 16, type: "catwalk", safe: true, motion: { axis: "y", amplitude: 12, speed: 0.043, phase: 2.4 } },
+		{ x: 3130, y: groundY - 118, w: 126, h: 16, type: "catwalk", safe: true, motion: { axis: "x", amplitude: 14, speed: 0.048, phase: 0.9 } },
 		{ x: 3400, y: groundY - 102, w: 134, h: 16, type: "catwalk" },
 		{ x: 3680, y: groundY - 116, w: 130, h: 16, type: "catwalk" },
 		{ x: 3950, y: groundY - 98, w: 136, h: 16, type: "catwalk" },
@@ -19,10 +19,10 @@ export function createLevel2(groundY) {
 	];
 
 	const hazards = [
-		{ x: 1300, y: groundY - 20, w: 320, h: 40, phase: 0.5 },
-		{ x: 2240, y: groundY - 20, w: 560, h: 40, phase: 1.7 },
-		{ x: 3340, y: groundY - 20, w: 460, h: 40, phase: 2.6 },
-		{ x: 4420, y: groundY - 20, w: 200, h: 40, phase: 3.1 },
+		{ x: 1280, y: groundY - 20, w: 360, h: 40, phase: 0.5 },
+		{ x: 2220, y: groundY - 20, w: 600, h: 40, phase: 1.7 },
+		{ x: 3320, y: groundY - 20, w: 500, h: 40, phase: 2.6 },
+		{ x: 4410, y: groundY - 20, w: 220, h: 40, phase: 3.1 },
 	];
 
 	const items = [
@@ -88,8 +88,17 @@ export function createLevel2(groundY) {
 		chapter: "Chapitre 2",
 		objective: "Traverse le bloc de securite et trouve l'acces vers l'exterieur.",
 		introText: "Avec tes premiers outils, tu te faufiles dans le bloc B avant le retour des gardes.",
+		theme: {
+			accent: "#6fd6ff",
+			accentSoft: "rgba(111, 214, 255, 0.28)",
+			danger: "#ff8f6b",
+			dangerSoft: "rgba(255, 143, 107, 0.22)",
+			lockClosed: "#6a3a2d",
+			lockOpen: "#285f54",
+			finishLabel: "SAS TECHNIQUE",
+		},
 		length: 5750,
-		checkpoints: [0, 700, 1300, 1900, 2500, 3100, 3700, 4250, 4550],
+		checkpoints: [0, 700, 1300, 1900, 2500, 3100, 3660, 4210, 4550],
 		hazards,
 		items,
 		locks,

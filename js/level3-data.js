@@ -5,12 +5,12 @@ export function createLevel3(groundY) {
 		{ x: 1380, y: groundY - 62, w: 138, h: 16, type: "catwalk" },
 		{ x: 1630, y: groundY - 86, w: 132, h: 16, type: "catwalk" },
 		{ x: 1870, y: groundY - 106, w: 128, h: 16, type: "catwalk" },
-		{ x: 2120, y: groundY - 92, w: 132, h: 16, type: "catwalk", safe: true, motion: { axis: "x", amplitude: 14, speed: 0.03, phase: 0.4 } },
-		{ x: 2380, y: groundY - 112, w: 132, h: 16, type: "catwalk", safe: true, motion: { axis: "y", amplitude: 10, speed: 0.04, phase: 1.6 } },
-		{ x: 2640, y: groundY - 98, w: 138, h: 16, type: "catwalk", safe: true, motion: { axis: "x", amplitude: 16, speed: 0.035, phase: 2.3 } },
+		{ x: 2120, y: groundY - 92, w: 132, h: 16, type: "catwalk", safe: true, motion: { axis: "x", amplitude: 16, speed: 0.034, phase: 0.4 } },
+		{ x: 2380, y: groundY - 112, w: 132, h: 16, type: "catwalk", safe: true, motion: { axis: "y", amplitude: 12, speed: 0.043, phase: 1.6 } },
+		{ x: 2640, y: groundY - 98, w: 138, h: 16, type: "catwalk", safe: true, motion: { axis: "x", amplitude: 18, speed: 0.038, phase: 2.3 } },
 		{ x: 2940, y: groundY - 128, w: 130, h: 16, type: "catwalk" },
 		{ x: 3210, y: groundY - 148, w: 126, h: 16, type: "catwalk" },
-		{ x: 3480, y: groundY - 132, w: 134, h: 16, type: "catwalk", safe: true, motion: { axis: "y", amplitude: 10, speed: 0.04, phase: 0.8 } },
+		{ x: 3480, y: groundY - 132, w: 134, h: 16, type: "catwalk", safe: true, motion: { axis: "y", amplitude: 12, speed: 0.045, phase: 0.8 } },
 		{ x: 3760, y: groundY - 112, w: 138, h: 16, type: "catwalk" },
 		{ x: 4060, y: groundY - 94, w: 140, h: 16, type: "catwalk" },
 		{ x: 4310, y: groundY - 102, w: 140, h: 16, type: "catwalk" },
@@ -19,10 +19,10 @@ export function createLevel3(groundY) {
 	];
 
 	const hazards = [
-		{ x: 1360, y: groundY - 20, w: 320, h: 40, phase: 0.3 },
-		{ x: 2280, y: groundY - 20, w: 560, h: 40, phase: 1.2 },
-		{ x: 3200, y: groundY - 20, w: 420, h: 40, phase: 2.1 },
-		{ x: 4300, y: groundY - 20, w: 140, h: 40, phase: 2.9 },
+		{ x: 1340, y: groundY - 20, w: 360, h: 40, phase: 0.3 },
+		{ x: 2260, y: groundY - 20, w: 620, h: 40, phase: 1.2 },
+		{ x: 3180, y: groundY - 20, w: 460, h: 40, phase: 2.1 },
+		{ x: 4280, y: groundY - 20, w: 180, h: 40, phase: 2.9 },
 	];
 
 	const items = [
@@ -88,8 +88,17 @@ export function createLevel3(groundY) {
 		chapter: "Chapitre 3",
 		objective: "Atteins la sortie finale avant que l'alarme ne se referme sur toi.",
 		introText: "La tour exterieure domine la prison. Une fois en haut, il n'y aura plus de retour possible.",
+		theme: {
+			accent: "#9be3a5",
+			accentSoft: "rgba(155, 227, 165, 0.28)",
+			danger: "#ff9f5c",
+			dangerSoft: "rgba(255, 159, 92, 0.22)",
+			lockClosed: "#5b4630",
+			lockOpen: "#2f6a43",
+			finishLabel: "SORTIE EXTERIEURE",
+		},
 		length: 5900,
-		checkpoints: [0, 800, 1500, 2200, 2900, 3500, 4100, 4650, 5000],
+		checkpoints: [0, 800, 1500, 2200, 2900, 3475, 4050, 4625, 5000],
 		hazards,
 		items,
 		locks,
