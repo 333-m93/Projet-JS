@@ -50,16 +50,30 @@ export function createSkyBackgroundRenderer(ctx, canvas, groundY, scene) {
 		}
 	}
 
-	return function drawSkyBackground() {
+	return function drawSkyBackground(level = {}) {
+		const chapter = level.chapter || "";
+		const hasRoute = scene.collectedItemIds?.has("l3-route");
 		const sky = ctx.createLinearGradient(0, 0, 0, groundY);
-		sky.addColorStop(0, "#05070d");
-		sky.addColorStop(0.45, "#162035");
-		sky.addColorStop(1, "#314b63");
+		if (chapter === "Chapitre 3" && hasRoute) {
+			sky.addColorStop(0, "#09111b");
+			sky.addColorStop(0.45, "#22304a");
+			sky.addColorStop(1, "#5e7386");
+		} else if (chapter === "Chapitre 2") {
+			sky.addColorStop(0, "#04070d");
+			sky.addColorStop(0.45, "#121a28");
+			sky.addColorStop(1, "#2f4154");
+		} else {
+			sky.addColorStop(0, "#05070d");
+			sky.addColorStop(0.45, "#162035");
+			sky.addColorStop(1, "#314b63");
+		}
 		ctx.fillStyle = sky;
 		ctx.fillRect(0, 0, canvas.width, groundY);
 
 		drawStars();
-		drawMoon();
+		if (chapter !== "Chapitre 2") {
+			drawMoon();
+		}
 
 		const fogLayer = ctx.createLinearGradient(0, 255, 0, groundY);
 		fogLayer.addColorStop(0, "rgba(103, 131, 158, 0.02)");
@@ -68,20 +82,24 @@ export function createSkyBackgroundRenderer(ctx, canvas, groundY, scene) {
 		ctx.fillRect(0, 220, canvas.width, groundY - 220);
 
 		const cloudOffset = (scene.worldOffset * 0.18) % 520;
-		for (let i = -1; i < 5; i++) {
-			drawCloud(i * 260 - cloudOffset, 132 + (i % 2) * 35, 1.2);
-			drawCloud(i * 320 - cloudOffset * 0.78, 220 + ((i + 1) % 2) * 26, 0.9);
+		if (chapter !== "Chapitre 2") {
+			for (let i = -1; i < 5; i++) {
+				drawCloud(i * 260 - cloudOffset, 132 + (i % 2) * 35, 1.2);
+				drawCloud(i * 320 - cloudOffset * 0.78, 220 + ((i + 1) % 2) * 26, 0.9);
+			}
 		}
 
 		const hillOffset = (scene.worldOffset * 0.3) % 700;
-		for (let i = -1; i < 4; i++) {
-			const baseX = i * 350 - hillOffset;
-			ctx.fillStyle = "#1d2a2e";
-			ctx.beginPath();
-			ctx.moveTo(baseX, groundY);
-			ctx.quadraticCurveTo(baseX + 175, 356, baseX + 350, groundY);
-			ctx.closePath();
-			ctx.fill();
+		if (chapter !== "Chapitre 2") {
+			for (let i = -1; i < 4; i++) {
+				const baseX = i * 350 - hillOffset;
+				ctx.fillStyle = chapter === "Chapitre 3" ? "#243230" : "#1d2a2e";
+				ctx.beginPath();
+				ctx.moveTo(baseX, groundY);
+				ctx.quadraticCurveTo(baseX + 175, 356, baseX + 350, groundY);
+				ctx.closePath();
+				ctx.fill();
+			}
 		}
 	};
 }

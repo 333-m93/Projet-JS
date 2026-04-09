@@ -58,6 +58,7 @@ function drawFatalError(error) {
 
 function startLevel(index) {
 	scene.currentLevelIndex = index;
+	scene.activeLevelData = levels[index]?.data || levels[0].data;
 	scene.worldOffset = 0;
 	scene.checkpointOffset = 0;
 	scene.levelWon = false;
@@ -82,6 +83,7 @@ startLevel(0);
 function loop() {
 	try {
 		let activeLevel = getActiveLevel();
+		scene.activeLevelData = activeLevel.data;
 		const updateResult = updateGame(
 			prisoner,
 			keys,
@@ -100,7 +102,7 @@ function loop() {
 
 		drawBackground();
 		activeLevel.draw(ctx, scene, canvas, activeLevel.data);
-		drawPrisoner(ctx, prisoner);
+		drawPrisoner(ctx, prisoner, scene, activeLevel.data);
 		requestAnimationFrame(loop);
 	} catch (error) {
 		console.error(error);

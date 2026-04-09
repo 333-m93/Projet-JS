@@ -1,5 +1,8 @@
-export function drawPrisoner(ctx, prisoner) {
+export function drawPrisoner(ctx, prisoner, scene) {
 	const speed = Math.abs(prisoner.vx);
+	const hasFlashlight = scene?.collectedItemIds?.has("l1-flash");
+	const hasUniform = scene?.collectedItemIds?.has("l3-uniform");
+	const hasCutter = scene?.collectedItemIds?.has("l3-cutter");
 	const bob = Math.sin(prisoner.walkCycle * 0.75) * Math.min(speed * 0.35, 1.8);
 	const armSwing = Math.sin(prisoner.walkCycle) * Math.min(speed * 1.15, 7);
 	const legSwing = Math.sin(prisoner.walkCycle) * Math.min(speed * 1.1, 6);
@@ -38,12 +41,18 @@ export function drawPrisoner(ctx, prisoner) {
 	ctx.fillRect(-2, 6, 4, 3);
 
 	const torsoHeight = 31 + jumpStretch * 10;
-	ctx.fillStyle = "#1f1f1f";
+	ctx.fillStyle = hasUniform ? "#4d6584" : "#1f1f1f";
 	ctx.fillRect(-12, 13, 24, torsoHeight);
 
-	ctx.fillStyle = "#ffffff";
-	for (let i = 0; i < 6; i++) {
-		ctx.fillRect(-10 + i * 4, 13, 2, torsoHeight);
+	if (hasUniform) {
+		ctx.fillStyle = "#d5e7ff";
+		ctx.fillRect(-1, 13, 2, torsoHeight);
+		ctx.fillRect(-8, 17, 16, 3);
+	} else {
+		ctx.fillStyle = "#ffffff";
+		for (let i = 0; i < 6; i++) {
+			ctx.fillRect(-10 + i * 4, 13, 2, torsoHeight);
+		}
 	}
 
 	ctx.fillStyle = "#444";
@@ -58,7 +67,7 @@ export function drawPrisoner(ctx, prisoner) {
 	ctx.fillStyle = "#181818";
 	ctx.font = "bold 6px Arial";
 	ctx.textAlign = "center";
-	ctx.fillText("407", 0, 33);
+	ctx.fillText(hasUniform ? "GARDE" : "407", 0, 33);
 
 	ctx.fillStyle = "#f2cfaa";
 	ctx.fillRect(-17, 20 + armSwing * 0.38, 5, 18);
@@ -123,6 +132,24 @@ export function drawPrisoner(ctx, prisoner) {
 	ctx.beginPath();
 	ctx.arc(ballX - 1.5, ballY - 1.5, 1.6, 0, Math.PI * 2);
 	ctx.fill();
+
+	if (hasFlashlight) {
+		ctx.fillStyle = "#3d4b57";
+		ctx.fillRect(10, 24, 4, 12);
+		ctx.fillStyle = "#cbeeff";
+		ctx.fillRect(10, 22, 4, 3);
+	}
+
+	if (hasCutter) {
+		ctx.strokeStyle = "#ef9c9c";
+		ctx.lineWidth = 2;
+		ctx.beginPath();
+		ctx.moveTo(-15, 38);
+		ctx.lineTo(-19, 44);
+		ctx.moveTo(-15, 38);
+		ctx.lineTo(-11, 44);
+		ctx.stroke();
+	}
 
 	ctx.restore();
 }

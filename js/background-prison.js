@@ -162,8 +162,56 @@ export function createPrisonBackgroundRenderer(ctx, canvas, groundY, scene) {
 		}
 	}
 
-	return function drawPrisonBackground() {
+	function drawInteriorBlock() {
+		const panelOffset = (scene.worldOffset * 0.36) % 180;
+		for (let x = -180; x < canvas.width + 180; x += 180) {
+			const baseX = x - panelOffset;
+			ctx.fillStyle = "#2a313a";
+			ctx.fillRect(baseX, 180, 150, 220);
+			ctx.strokeStyle = "#4d5b6a";
+			ctx.strokeRect(baseX, 180, 150, 220);
+			ctx.fillStyle = "#1b2128";
+			ctx.fillRect(baseX + 16, 210, 42, 130);
+			ctx.fillRect(baseX + 90, 210, 42, 130);
+			ctx.fillStyle = "#89a9c5";
+			ctx.fillRect(baseX + 30, 194, 16, 8);
+			ctx.fillRect(baseX + 104, 194, 16, 8);
+		}
+
+		ctx.fillStyle = "rgba(99, 152, 205, 0.08)";
+		for (let y = 176; y < groundY; y += 52) {
+			ctx.fillRect(0, y, canvas.width, 10);
+		}
+	}
+
+	function drawEscapeYard() {
+		const hasUniform = scene.collectedItemIds?.has("l3-uniform");
+		const hasRoute = scene.collectedItemIds?.has("l3-route");
 		drawPrisonComplex();
+		if (hasUniform) {
+			ctx.fillStyle = "rgba(134, 210, 154, 0.08)";
+			ctx.fillRect(0, 0, canvas.width, groundY);
+		}
+		if (hasRoute) {
+			ctx.strokeStyle = "rgba(196, 227, 172, 0.32)";
+			ctx.lineWidth = 3;
+			ctx.beginPath();
+			ctx.moveTo(canvas.width - 180, groundY - 6);
+			ctx.lineTo(canvas.width - 120, groundY - 40);
+			ctx.lineTo(canvas.width - 60, groundY - 10);
+			ctx.stroke();
+		}
+	}
+
+	return function drawPrisonBackground(level = {}) {
+		const chapter = level.chapter || "";
+		if (chapter === "Chapitre 2") {
+			drawInteriorBlock();
+		} else if (chapter === "Chapitre 3") {
+			drawEscapeYard();
+		} else {
+			drawPrisonComplex();
+		}
 		drawPoliceLights();
 		drawGround();
 	};

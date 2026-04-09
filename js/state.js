@@ -10,6 +10,7 @@ export const prisoner = createPrisoner(groundY);
 
 export const scene = {
 	currentLevelIndex: 0,
+	activeLevelData: null,
 	worldOffset: 0,
 	sceneTime: 0,
 	checkpointOffset: 0,

@@ -6,7 +6,8 @@ export function createBackgroundRenderer(ctx, canvas, groundY, scene) {
 	const drawPrisonBackground = createPrisonBackgroundRenderer(ctx, canvas, groundY, scene);
 
 	return function drawBackground() {
-		drawSkyBackground();
-		drawPrisonBackground();
+		const level = scene.activeLevelData || {};
+		drawSkyBackground(level);
+		drawPrisonBackground(level);
 	};
 }
