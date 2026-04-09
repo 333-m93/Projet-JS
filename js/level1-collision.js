@@ -16,8 +16,9 @@ export function applyLevel1Collisions(prisoner, scene, canvas, level, groundY, p
 
 	if (scene.levelWon) {
 		scene.worldOffset = clamp(scene.worldOffset, minOffset, maxOffset);
+		scene.levelWinTimer += 1;
 		scene.resetFlash = Math.max(0, scene.resetFlash - 1);
-		return;
+		return { reachedFinish: false };
 	}
 
 	for (const cp of level.checkpoints) {
@@ -39,7 +40,26 @@ export function applyLevel1Collisions(prisoner, scene, canvas, level, groundY, p
 		const hazardRect = getHazardRect(hazardZone, nextOffset);
 		if (intersects(playerRect, hazardRect)) {
 			resetToCheckpoint(prisoner, scene, groundY, maxOffset);
-			return;
+			return { reachedFinish: false };
+		}
+	}
+
+	for (const item of level.items || []) {
+		if (scene.collectedItemIds.has(item.id)) {
+			continue;
+		}
+
+		const itemRect = {
+			x: item.x - nextOffset,
+			y: item.y,
+			w: item.w,
+			h: item.h,
+		};
+
+		if (intersects(playerRect, itemRect)) {
+			scene.collectedItemIds.add(item.id);
+			scene.storyToast = item.story || `${item.label || "Objet"} recupere`;
+			scene.storyToastTimer = 420;
 		}
 	}
 
@@ -50,7 +70,7 @@ export function applyLevel1Collisions(prisoner, scene, canvas, level, groundY, p
 		const rect = getScreenRect(obstacle, nextOffset, scene.sceneTime);
 		if (intersects(playerRect, rect)) {
 			resetToCheckpoint(prisoner, scene, groundY, maxOffset);
-			return;
+			return { reachedFinish: false };
 		}
 	}
 
@@ -102,7 +122,7 @@ export function applyLevel1Collisions(prisoner, scene, canvas, level, groundY, p
 	scene.worldOffset = Math.max(minOffset, Math.min(maxOffset, nextOffset));
 	if (prisoner.y > canvas.height + 60) {
 		resetToCheckpoint(prisoner, scene, groundY, maxOffset);
-		return;
+		return { reachedFinish: false };
 	}
 
 	const finishRect = {
@@ -113,9 +133,18 @@ export function applyLevel1Collisions(prisoner, scene, canvas, level, groundY, p
 	};
 	if (intersects(playerRect, finishRect)) {
 		scene.levelWon = true;
+		scene.pendingLevelAdvance = true;
+		scene.levelWinTimer = 0;
 		prisoner.vx = 0;
 		prisoner.vy = 0;
+		scene.resetFlash = Math.max(0, scene.resetFlash - 1);
+		return { reachedFinish: true };
 	}
 
+	scene.storyToastTimer = Math.max(0, scene.storyToastTimer - 1);
+	if (scene.storyToastTimer === 0) {
+		scene.storyToast = "";
+	}
 	scene.resetFlash = Math.max(0, scene.resetFlash - 1);
+	return { reachedFinish: false };
 }

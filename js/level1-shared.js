@@ -50,8 +50,26 @@ export function ensureSceneLevelState(scene) {
 	if (typeof scene.levelWon !== "boolean") {
 		scene.levelWon = false;
 	}
+	if (typeof scene.pendingLevelAdvance !== "boolean") {
+		scene.pendingLevelAdvance = false;
+	}
+	if (typeof scene.levelWinTimer !== "number") {
+		scene.levelWinTimer = 0;
+	}
 	if (typeof scene.resetFlash !== "number") {
 		scene.resetFlash = 0;
+	}
+	if (!(scene.collectedItemIds instanceof Set)) {
+		scene.collectedItemIds = new Set();
+	}
+	if (typeof scene.storyToast !== "string") {
+		scene.storyToast = "";
+	}
+	if (typeof scene.storyToastTimer !== "number") {
+		scene.storyToastTimer = 0;
+	}
+	if (typeof scene.levelIntroTimer !== "number") {
+		scene.levelIntroTimer = 0;
 	}
 }
 
