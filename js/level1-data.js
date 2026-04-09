@@ -1,8 +1,8 @@
 export function createLevel1(groundY) {
 	const obstacles = [
-		{ x: 720, y: groundY - 24, w: 100, h: 24, type: "barrier", safe: true },
-		{ x: 1080, y: groundY - 28, w: 76, h: 28, type: "crate", safe: true },
-		{ x: 1400, y: groundY - 22, w: 84, h: 22, type: "barrier", safe: true },
+		{ x: 720, y: groundY - 24, w: 100, h: 24, type: "barrier" },
+		{ x: 1080, y: groundY - 28, w: 76, h: 28, type: "crate" },
+		{ x: 1400, y: groundY - 22, w: 84, h: 22, type: "barrier" },
 		{ x: 1850, y: groundY - 34, w: 120, h: 16, type: "catwalk" },
 		{ x: 2060, y: groundY - 58, w: 126, h: 16, type: "catwalk" },
 		{ x: 2280, y: groundY - 74, w: 132, h: 16, type: "catwalk" },
@@ -10,8 +10,8 @@ export function createLevel1(groundY) {
 		{ x: 2890, y: groundY - 84, w: 130, h: 16, type: "catwalk" },
 		{ x: 3170, y: groundY - 98, w: 132, h: 16, type: "catwalk" },
 		{ x: 3450, y: groundY - 88, w: 136, h: 16, type: "catwalk" },
-		{ x: 3860, y: groundY - 26, w: 92, h: 26, type: "barrier", safe: true },
-		{ x: 4240, y: groundY - 36, w: 74, h: 36, type: "concrete", safe: true },
+		{ x: 3860, y: groundY - 26, w: 92, h: 26, type: "barrier" },
+		{ x: 4020, y: groundY - 34, w: 70, h: 34, type: "concrete" },
 	];
 
 	const hazards = [
@@ -27,7 +27,7 @@ export function createLevel1(groundY) {
 
 	for (const obstacle of obstacles) {
 		obstacle.solid = true;
-		if (obstacle.type !== "catwalk" && !obstacle.safe) {
+		if (obstacle.type !== "catwalk") {
 			obstacle.deadly = true;
 		}
 	}
@@ -38,17 +38,17 @@ export function createLevel1(groundY) {
 		objective: "Sors du bloc initial et recupere de quoi preparer ton evasion.",
 		introText: "Tu profites d'une ronde plus calme pour quitter ta cellule et traverser la cour.",
 		length: 5100,
-		checkpoints: [0, 1000, 2000, 3000, 3950, 4700],
+		checkpoints: [0, 650, 1150, 1650, 2150, 2650, 3150, 3600, 3925],
 		hazards,
 		items,
 		finish: {
-			x: 4040,
+			x: 4140,
 			y: groundY - 118,
 			w: 120,
 			h: 118,
 		},
 		finishTrigger: {
-			x: 3960,
+			x: 4070,
 			y: groundY - 210,
 			w: 300,
 			h: 240,

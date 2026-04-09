@@ -1,7 +1,7 @@
 export function createLevel3(groundY) {
 	const obstacles = [
-		{ x: 730, y: groundY - 24, w: 102, h: 24, type: "barrier", safe: true },
-		{ x: 1060, y: groundY - 38, w: 82, h: 38, type: "concrete", safe: true },
+		{ x: 730, y: groundY - 24, w: 102, h: 24, type: "barrier" },
+		{ x: 1060, y: groundY - 38, w: 82, h: 38, type: "concrete" },
 		{ x: 1380, y: groundY - 62, w: 138, h: 16, type: "catwalk" },
 		{ x: 1630, y: groundY - 86, w: 132, h: 16, type: "catwalk" },
 		{ x: 1870, y: groundY - 106, w: 128, h: 16, type: "catwalk" },
@@ -13,8 +13,8 @@ export function createLevel3(groundY) {
 		{ x: 3480, y: groundY - 132, w: 134, h: 16, type: "catwalk", safe: true, motion: { axis: "y", amplitude: 10, speed: 0.04, phase: 0.8 } },
 		{ x: 3760, y: groundY - 112, w: 138, h: 16, type: "catwalk" },
 		{ x: 4060, y: groundY - 94, w: 140, h: 16, type: "catwalk" },
-		{ x: 4390, y: groundY - 40, w: 82, h: 40, type: "concrete", safe: true },
-		{ x: 4710, y: groundY - 24, w: 112, h: 24, type: "barrier", safe: true },
+		{ x: 4250, y: groundY - 40, w: 82, h: 40, type: "concrete" },
+		{ x: 4540, y: groundY - 24, w: 112, h: 24, type: "barrier" },
 	];
 
 	const hazards = [
@@ -32,7 +32,7 @@ export function createLevel3(groundY) {
 
 	for (const obstacle of obstacles) {
 		obstacle.solid = true;
-		if (obstacle.type !== "catwalk" && !obstacle.safe) {
+		if (obstacle.type !== "catwalk") {
 			obstacle.deadly = true;
 		}
 	}
@@ -42,18 +42,18 @@ export function createLevel3(groundY) {
 		chapter: "Chapitre 3",
 		objective: "Atteins la sortie finale avant que l'alarme ne se referme sur toi.",
 		introText: "La tour exterieure domine la prison. Une fois en haut, il n'y aura plus de retour possible.",
-		length: 5600,
-		checkpoints: [0, 1200, 2400, 3400, 4300, 5000],
+		length: 5900,
+		checkpoints: [0, 800, 1500, 2200, 2900, 3500, 4100, 4650, 5000],
 		hazards,
 		items,
 		finish: {
-			x: 4390,
+			x: 4870,
 			y: groundY - 150,
 			w: 150,
 			h: 150,
 		},
 		finishTrigger: {
-			x: 4300,
+			x: 4800,
 			y: groundY - 240,
 			w: 320,
 			h: 300,

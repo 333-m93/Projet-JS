@@ -1,7 +1,7 @@
 export function createLevel2(groundY) {
 	const obstacles = [
-		{ x: 700, y: groundY - 24, w: 100, h: 24, type: "barrier", safe: true },
-		{ x: 1020, y: groundY - 36, w: 80, h: 36, type: "concrete", safe: true },
+		{ x: 700, y: groundY - 24, w: 100, h: 24, type: "barrier" },
+		{ x: 1020, y: groundY - 36, w: 80, h: 36, type: "concrete" },
 		{ x: 1320, y: groundY - 58, w: 144, h: 16, type: "catwalk" },
 		{ x: 1580, y: groundY - 78, w: 132, h: 16, type: "catwalk" },
 		{ x: 1820, y: groundY - 98, w: 126, h: 16, type: "catwalk" },
@@ -13,8 +13,8 @@ export function createLevel2(groundY) {
 		{ x: 3400, y: groundY - 102, w: 134, h: 16, type: "catwalk" },
 		{ x: 3680, y: groundY - 116, w: 130, h: 16, type: "catwalk" },
 		{ x: 3950, y: groundY - 98, w: 136, h: 16, type: "catwalk" },
-		{ x: 4280, y: groundY - 34, w: 80, h: 34, type: "concrete", safe: true },
-		{ x: 4590, y: groundY - 24, w: 110, h: 24, type: "barrier", safe: true },
+		{ x: 4280, y: groundY - 34, w: 80, h: 34, type: "concrete" },
+		{ x: 4480, y: groundY - 24, w: 96, h: 24, type: "barrier" },
 	];
 
 	const hazards = [
@@ -32,7 +32,7 @@ export function createLevel2(groundY) {
 
 	for (const obstacle of obstacles) {
 		obstacle.solid = true;
-		if (obstacle.type !== "catwalk" && !obstacle.safe) {
+		if (obstacle.type !== "catwalk") {
 			obstacle.deadly = true;
 		}
 	}
@@ -43,19 +43,19 @@ export function createLevel2(groundY) {
 		objective: "Traverse le bloc de securite et trouve l'acces vers l'exterieur.",
 		introText: "Avec tes premiers outils, tu te faufiles dans le bloc B avant le retour des gardes.",
 		length: 5750,
-		checkpoints: [0, 1100, 2200, 3200, 4200, 5000],
+		checkpoints: [0, 700, 1300, 1900, 2500, 3100, 3700, 4250, 4550],
 		hazards,
 		items,
 		finish: {
-			x: 4580,
+			x: 4760,
 			y: groundY - 126,
 			w: 130,
 			h: 126,
 		},
 		finishTrigger: {
-			x: 4500,
+			x: 4720,
 			y: groundY - 220,
-			w: 280,
+			w: 260,
 			h: 250,
 		},
 		obstacles,
