@@ -60,6 +60,7 @@ function startLevel(index) {
 	scene.currentLevelIndex = index;
 	scene.activeLevelData = levels[index]?.data || levels[0].data;
 	scene.worldOffset = 0;
+	scene.sceneTime = 0;
 	scene.checkpointOffset = 0;
 	scene.levelWon = false;
 	scene.pendingLevelAdvance = false;
@@ -70,12 +71,14 @@ function startLevel(index) {
 	scene.storyToast = "";
 	scene.storyToastTimer = 0;
 	scene.levelIntroTimer = 420;
+	scene.startSequenceTimer = index === 0 ? 120 : 0;
 
-	prisoner.x = 180;
+	prisoner.x = index === 0 ? 122 : 180;
 	prisoner.y = groundY - prisoner.h;
 	prisoner.vx = 0;
 	prisoner.vy = 0;
 	prisoner.onGround = true;
+	prisoner.facing = 1;
 }
 
 startLevel(0);

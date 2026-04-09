@@ -23,4 +23,5 @@ export const scene = {
 	storyToast: "",
 	storyToastTimer: 0,
 	levelIntroTimer: 0,
+	startSequenceTimer: 0,
 };
