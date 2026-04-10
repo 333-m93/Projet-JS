@@ -7,6 +7,42 @@ import { createLevel2, drawLevel2, applyLevel2Collisions } from "./level2.js";
 import { createLevel3, drawLevel3, applyLevel3Collisions } from "./level3.js";
 import { canvas, ctx, keys, groundY, gravity, prisoner, scene } from "./state.js";
 
+const backgroundMusic = new Audio(
+	new URL("../song/1 HOUR - Emergency Base ALARM.mp3", import.meta.url),
+);
+backgroundMusic.loop = true;
+backgroundMusic.preload = "auto";
+backgroundMusic.volume = 0.45;
+
+let isMusicUnlocked = false;
+
+function startBackgroundMusic() {
+	if (isMusicUnlocked) {
+		return;
+	}
+
+	backgroundMusic
+		.play()
+		.then(() => {
+			isMusicUnlocked = true;
+		})
+		.catch(() => {
+			const unlockMusic = () => {
+				backgroundMusic
+					.play()
+					.then(() => {
+						isMusicUnlocked = true;
+					})
+					.catch(() => {
+						/* ignore autoplay rejections until next interaction */
+					});
+			};
+
+			window.addEventListener("keydown", unlockMusic, { once: true });
+			window.addEventListener("pointerdown", unlockMusic, { once: true });
+		});
+}
+
 const drawBackground = createBackgroundRenderer(ctx, canvas, groundY, scene);
 const levels = [
 	{
@@ -114,4 +150,5 @@ function loop() {
 }
 
 setupControls(keys);
+startBackgroundMusic();
 loop();
