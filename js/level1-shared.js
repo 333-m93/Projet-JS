@@ -1,0 +1,65 @@
+export function intersects(a, b) {
+	return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+}
+
+export function clamp(value, min, max) {
+	return Math.max(min, Math.min(max, value));
+}
+
+export function getObstacleWorldPosition(obstacle, sceneTime) {
+	let x = obstacle.x;
+	let y = obstacle.y;
+
+	if (obstacle.motion?.axis === "x") {
+		x += Math.sin(sceneTime * obstacle.motion.speed + obstacle.motion.phase) * obstacle.motion.amplitude;
+	}
+
+	if (obstacle.motion?.axis === "y") {
+		y += Math.sin(sceneTime * obstacle.motion.speed + obstacle.motion.phase) * obstacle.motion.amplitude;
+	}
+
+	return { x, y };
+}
+
+export function getScreenRect(obstacle, worldOffset, sceneTime) {
+	const worldPos = getObstacleWorldPosition(obstacle, sceneTime);
+	return {
+		x: worldPos.x - worldOffset,
+		y: worldPos.y,
+		w: obstacle.w,
+		h: obstacle.h,
+		type: obstacle.type,
+		worldX: worldPos.x,
+		worldY: worldPos.y,
+	};
+}
+
+export function getHazardRect(hazard, worldOffset) {
+	return {
+		x: hazard.x - worldOffset,
+		y: hazard.y,
+		w: hazard.w,
+		h: hazard.h,
+	};
+}
+
+export function ensureSceneLevelState(scene) {
+	if (typeof scene.checkpointOffset !== "number") {
+		scene.checkpointOffset = 0;
+	}
+	if (typeof scene.levelWon !== "boolean") {
+		scene.levelWon = false;
+	}
+	if (typeof scene.resetFlash !== "number") {
+		scene.resetFlash = 0;
+	}
+}
+
+export function resetToCheckpoint(prisoner, scene, groundY, maxOffset) {
+	prisoner.vx = 0;
+	prisoner.vy = 0;
+	prisoner.y = groundY - prisoner.h;
+	prisoner.onGround = true;
+	scene.worldOffset = clamp(scene.checkpointOffset, 0, maxOffset);
+	scene.resetFlash = 24;
+}
