@@ -2,8 +2,7 @@ import {
 	clamp,
 	ensureSceneLevelState,
 	getHazardRect,
-	getLockCollisionRect,
-	getLockRect,
+	getLockTrapRect,
 	getScreenRect,
 	intersects,
 	resetToCheckpoint,
@@ -69,21 +68,29 @@ export function applyLevel1Collisions(prisoner, scene, canvas, level, groundY, p
 		if (scene.unlockedLockIds.has(lock.id)) {
 			continue;
 		}
-
-		const lockRect = getLockRect(lock, nextOffset);
-		if (!intersects(playerRect, lockRect)) {
+		if (!scene.collectedItemIds.has(lock.requiredItemId)) {
 			continue;
 		}
 
-		if (scene.collectedItemIds.has(lock.requiredItemId)) {
-			scene.unlockedLockIds.add(lock.id);
-			scene.storyToast = lock.successText || `${lock.label || "Passage"} ouvert`;
-			scene.storyToastTimer = 420;
+		scene.unlockedLockIds.add(lock.id);
+		scene.storyToast = lock.successText || "Piege neutralise";
+		scene.storyToastTimer = Math.max(scene.storyToastTimer, 240);
+	}
+
+	for (const lock of level.locks || []) {
+		if (scene.unlockedLockIds.has(lock.id)) {
 			continue;
 		}
 
-		scene.storyToast = lock.lockedText || `Il te faut ${lock.requiredItemLabel || "un objet"} pour avancer.`;
-		scene.storyToastTimer = Math.max(scene.storyToastTimer, 180);
+		const trapRect = getLockTrapRect(lock, nextOffset);
+		if (!intersects(playerRect, trapRect)) {
+			continue;
+		}
+
+		scene.storyToast = lock.lockedText || `Il te faut ${lock.requiredItemLabel || "un outil"} pour neutraliser ce piege.`;
+		scene.storyToastTimer = Math.max(scene.storyToastTimer, 240);
+		resetToCheckpoint(prisoner, scene, groundY, maxOffset);
+		return { reachedFinish: false };
 	}
 
 	for (const obstacle of level.obstacles) {
@@ -121,30 +128,6 @@ export function applyLevel1Collisions(prisoner, scene, canvas, level, groundY, p
 		}
 	}
 
-	for (const lock of level.locks || []) {
-		if (scene.unlockedLockIds.has(lock.id)) {
-			continue;
-		}
-		const rect = getLockCollisionRect(lock, nextOffset);
-		if (!intersects(playerRect, rect)) {
-			continue;
-		}
-
-		if (previousBottom <= rect.y + 2 && playerBottom >= rect.y) {
-			prisoner.y = rect.y - prisoner.h;
-			prisoner.vy = 0;
-			prisoner.onGround = true;
-			playerRect.y = prisoner.y;
-			continue;
-		}
-
-		if (previousY >= rect.y + rect.h - 2 && prisoner.y < rect.y + rect.h) {
-			prisoner.y = rect.y + rect.h;
-			prisoner.vy = Math.max(0, prisoner.vy);
-			playerRect.y = prisoner.y;
-		}
-	}
-
 	for (const obstacle of level.obstacles) {
 		if (!obstacle.solid) {
 			continue;
@@ -162,27 +145,6 @@ export function applyLevel1Collisions(prisoner, scene, canvas, level, groundY, p
 
 		if (prisoner.vx < 0 && prisoner.x < rect.x + rect.w && prisoner.x + prisoner.w > rect.x + rect.w) {
 			nextOffset = rect.worldX + rect.w - prisoner.x;
-			prisoner.vx = 0;
-		}
-	}
-
-	for (const lock of level.locks || []) {
-		if (scene.unlockedLockIds.has(lock.id)) {
-			continue;
-		}
-		const rect = getLockCollisionRect(lock, nextOffset);
-		const verticalOverlap = prisoner.y + prisoner.h > rect.y + 4 && prisoner.y < rect.y + rect.h - 4;
-		if (!verticalOverlap) {
-			continue;
-		}
-
-		if (prisoner.vx > 0 && prisoner.x + prisoner.w > rect.x && prisoner.x < rect.x) {
-			nextOffset = lock.x - (prisoner.x + prisoner.w);
-			prisoner.vx = 0;
-		}
-
-		if (prisoner.vx < 0 && prisoner.x < rect.x + rect.w && prisoner.x + prisoner.w > rect.x + rect.w) {
-			nextOffset = lock.x + rect.w - prisoner.x;
 			prisoner.vx = 0;
 		}
 	}

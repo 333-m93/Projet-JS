@@ -1,14 +1,17 @@
-import { ensureSceneLevelState, getScreenRect } from "./level1-shared.js";
+import { ensureSceneLevelState, getLockTrapRect, getScreenRect } from "./level1-shared.js";
 
 function getLevelTheme(level) {
+	const safeLevel = level || {};
+	const theme = safeLevel.theme || {};
+
 	return {
-		accent: level.theme?.accent || "#8ec5ff",
-		accentSoft: level.theme?.accentSoft || "rgba(142, 197, 255, 0.28)",
-		danger: level.theme?.danger || "#ff7272",
-		dangerSoft: level.theme?.dangerSoft || "rgba(255, 114, 114, 0.22)",
-		lockClosed: level.theme?.lockClosed || "#6f3131",
-		lockOpen: level.theme?.lockOpen || "#326147",
-		finishLabel: level.theme?.finishLabel || "ZONE SECURISEE",
+		accent: theme.accent || "#8ec5ff",
+		accentSoft: theme.accentSoft || "rgba(142, 197, 255, 0.28)",
+		danger: theme.danger || "#ff7272",
+		dangerSoft: theme.dangerSoft || "rgba(255, 114, 114, 0.22)",
+		lockClosed: theme.lockClosed || "#6f3131",
+		lockOpen: theme.lockOpen || "#326147",
+		finishLabel: theme.finishLabel || "ZONE SECURISEE",
 	};
 }
 
@@ -134,6 +137,10 @@ function drawHazardZone(ctx, hazard, x, theme) {
 
 function drawFinishGate(ctx, scene, level, theme) {
 	const gate = level.finish;
+	if (!gate || typeof gate.x !== "number" || typeof gate.y !== "number") {
+		return;
+	}
+
 	const x = gate.x - scene.worldOffset;
 	const y = gate.y;
 
@@ -160,29 +167,90 @@ function drawFinishGate(ctx, scene, level, theme) {
 	ctx.fillRect(x + gate.w - 22, y + 8, 12, 6);
 }
 
-function drawLock(ctx, lock, x, y, unlocked, theme) {
-	if (lock.type === "door") {
-		ctx.fillStyle = unlocked ? theme.lockOpen : theme.lockClosed;
-		ctx.fillRect(x, y, lock.w, lock.h);
-		ctx.strokeStyle = unlocked ? theme.accent : "#f0a1a1";
-		ctx.lineWidth = 2;
-		ctx.strokeRect(x, y, lock.w, lock.h);
-		ctx.fillStyle = unlocked ? "#c9ffd2" : "#ffe0a8";
-		ctx.fillRect(x + lock.w - 16, y + lock.h / 2 - 4, 6, 8);
-		return;
-	}
+function drawLockIndicator(ctx, trapRect, hasItem) {
+	const lightX = trapRect.x - 16;
+	const lightY = trapRect.y + trapRect.h - 3;
+	const color = hasItem ? "#6fff9d" : "#ff6464";
+	const glow = hasItem ? "rgba(111, 255, 157, 0.45)" : "rgba(255, 100, 100, 0.42)";
 
-	ctx.strokeStyle = unlocked ? theme.accent : "#d8dde4";
-	ctx.lineWidth = 3;
-	for (let i = 0; i < lock.w; i += 14) {
+	ctx.fillStyle = "rgba(18, 26, 34, 0.92)";
+	ctx.fillRect(lightX - 6, lightY - 4, 12, 8);
+	ctx.fillStyle = glow;
+	ctx.beginPath();
+	ctx.arc(lightX, lightY, 10, 0, Math.PI * 2);
+	ctx.fill();
+	ctx.fillStyle = color;
+	ctx.beginPath();
+	ctx.arc(lightX, lightY, 4, 0, Math.PI * 2);
+	ctx.fill();
+}
+
+function drawLock(ctx, lock, x, y, theme, sceneTime) {
+	const trapRect = getLockTrapRect(lock, 0);
+	const trapHeight = trapRect.h;
+	const trapY = trapRect.y;
+	const pulse = 0.35 + Math.max(0, Math.sin(sceneTime * 0.16 + x * 0.02)) * 0.65;
+	const baseGlow = "rgba(255, 70, 70,";
+	const lineColor = "#ff8b8b";
+	const frameColor = "#7c2e2e";
+	const floorGlowWidth = lock.w + 58;
+	const floorGlowX = x - (floorGlowWidth - lock.w) / 2;
+
+	ctx.fillStyle = "rgba(6, 10, 16, 0.65)";
+	ctx.fillRect(x - 4, trapY - 3, lock.w + 8, trapHeight + 6);
+	ctx.fillStyle = `${baseGlow}${(0.16 + pulse * 0.34).toFixed(3)})`;
+	ctx.fillRect(floorGlowX, trapY - 20, floorGlowWidth, trapHeight + 36);
+
+	ctx.fillStyle = "#1f2833";
+	ctx.fillRect(x, trapY, lock.w, trapHeight);
+	ctx.strokeStyle = frameColor;
+	ctx.lineWidth = 2;
+	ctx.strokeRect(x, trapY, lock.w, trapHeight);
+
+	ctx.fillStyle = `${baseGlow}${(0.35 + pulse * 0.35).toFixed(3)})`;
+	ctx.fillRect(x + 2, trapY + 2, lock.w - 4, trapHeight - 4);
+
+	ctx.strokeStyle = lineColor;
+	ctx.lineWidth = 1.6;
+	for (let i = 4; i < lock.w - 4; i += 10) {
 		ctx.beginPath();
-		ctx.moveTo(x + i + 2, y);
-		ctx.lineTo(x + i + 2, y + lock.h);
+		ctx.moveTo(x + i, trapY + 3);
+		ctx.lineTo(x + i + 6, trapY + trapHeight - 3);
 		ctx.stroke();
 	}
-	ctx.strokeStyle = unlocked ? theme.lockOpen : "#8a98a8";
-	ctx.lineWidth = 2;
-	ctx.strokeRect(x, y, lock.w, lock.h);
+
+	if (lock.trapKind === "shock") {
+		ctx.strokeStyle = "#9ad9ff";
+		ctx.lineWidth = 2;
+		for (let i = 8; i < lock.w - 8; i += 20) {
+			ctx.beginPath();
+			ctx.moveTo(x + i, trapY + 4);
+			ctx.lineTo(x + i + 6, trapY + 10);
+			ctx.lineTo(x + i - 2, trapY + 16);
+			ctx.lineTo(x + i + 8, trapY + trapHeight - 4);
+			ctx.stroke();
+		}
+	} else if (lock.trapKind === "acid") {
+		ctx.fillStyle = "rgba(145, 255, 112, 0.72)";
+		for (let i = 6; i < lock.w - 6; i += 14) {
+			ctx.beginPath();
+			ctx.arc(x + i, trapY + trapHeight / 2, 3.2, 0, Math.PI * 2);
+			ctx.fill();
+		}
+	} else {
+		ctx.fillStyle = "#ffd1d1";
+		for (let i = 8; i < lock.w - 4; i += 16) {
+			ctx.beginPath();
+			ctx.moveTo(x + i, trapY + trapHeight - 2);
+			ctx.lineTo(x + i + 6, trapY + 4);
+			ctx.lineTo(x + i + 12, trapY + trapHeight - 2);
+			ctx.closePath();
+			ctx.fill();
+		}
+	}
+
+	ctx.fillStyle = `${baseGlow}${(0.08 + pulse * 0.2).toFixed(3)})`;
+	ctx.fillRect(x - 18, trapY - 12, lock.w + 36, trapHeight + 24);
 }
 
 function drawStoryItem(ctx, item, x, y, sceneTime) {
@@ -327,25 +395,26 @@ function drawLocks(ctx, scene, canvas, level, theme) {
 		if (x + lock.w < -80 || x > canvas.width + 80) {
 			continue;
 		}
-		drawLock(ctx, lock, x, lock.y, scene.unlockedLockIds.has(lock.id), theme);
-
-		if (!scene.unlockedLockIds.has(lock.id)) {
-			ctx.fillStyle = "#ffdca8";
-			ctx.font = "bold 10px Arial";
-			ctx.textAlign = "center";
-			ctx.fillText(lock.label || "Verrou", x + lock.w / 2, lock.y - 10);
+		const hasItem = scene.collectedItemIds.has(lock.requiredItemId);
+		const unlocked = scene.unlockedLockIds.has(lock.id) || hasItem;
+		const trapRect = getLockTrapRect(lock, scene.worldOffset);
+		drawLockIndicator(ctx, trapRect, unlocked);
+		if (!unlocked) {
+			drawLock(ctx, lock, x, lock.y, theme, scene.sceneTime);
 		}
 	}
 }
 
 function drawStoryHud(ctx, scene, canvas, level) {
 	const theme = getLevelTheme(level);
-	const totalItems = (level.items || []).length;
-	const collectedItems = totalItems === 0 ? 0 : (level.items || []).filter((item) => scene.collectedItemIds.has(item.id)).length;
-	const collectedLabels = (level.items || [])
+	const items = level?.items || [];
+	const totalItems = items.length;
+	const collectedItems = totalItems === 0 ? 0 : items.filter((item) => scene.collectedItemIds.has(item.id)).length;
+	const collectedLabels = items
 		.filter((item) => scene.collectedItemIds.has(item.id))
 		.map((item) => item.label);
-	const progress = Math.max(0, Math.min(1, scene.worldOffset / (level.length - canvas.width)));
+	const maxOffset = Math.max(1, (level?.length || canvas.width) - canvas.width);
+	const progress = Math.max(0, Math.min(1, scene.worldOffset / maxOffset));
 	const barX = 14;
 	const barY = 54;
 	const barW = 250;
@@ -414,10 +483,14 @@ function drawStoryHud(ctx, scene, canvas, level) {
 }
 
 export function drawLevel1(ctx, scene, canvas, level) {
+	if (!ctx || !scene || !canvas || !level) {
+		return;
+	}
+
 	ensureSceneLevelState(scene);
 	const theme = getLevelTheme(level);
 
-	for (const hazardZone of level.hazards) {
+	for (const hazardZone of level.hazards || []) {
 		const x = hazardZone.x - scene.worldOffset;
 		if (x + hazardZone.w < -80 || x > canvas.width + 80) {
 			continue;
@@ -425,7 +498,7 @@ export function drawLevel1(ctx, scene, canvas, level) {
 		drawHazardZone(ctx, { ...hazardZone, time: scene.sceneTime }, x, theme);
 	}
 
-	for (const obstacle of level.obstacles) {
+	for (const obstacle of level.obstacles || []) {
 		const rect = getScreenRect(obstacle, scene.worldOffset, scene.sceneTime);
 		const x = rect.x;
 		if (x + obstacle.w < -80 || x > canvas.width + 80) {

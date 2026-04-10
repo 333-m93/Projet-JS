@@ -52,6 +52,25 @@ export function getLockRect(lock, worldOffset) {
 	};
 }
 
+export function getLockTrapRect(lock, worldOffset) {
+	if (lock.type === "ground-trap") {
+		return {
+			x: lock.x - worldOffset,
+			y: lock.y,
+			w: lock.w,
+			h: lock.h,
+		};
+	}
+
+	const trapHeight = Math.max(14, Math.min(26, Math.floor(lock.h * 0.24)));
+	return {
+		x: lock.x - worldOffset,
+		y: lock.y + lock.h - trapHeight,
+		w: lock.w,
+		h: trapHeight,
+	};
+}
+
 export function getLockCollisionRect(lock, worldOffset) {
 	const rect = getLockRect(lock, worldOffset);
 	if (!lock.sealedTop) {
