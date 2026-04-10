@@ -48,7 +48,7 @@ export function createLevel3(groundY) {
 		},
 		{
 			id: "l3-hatch",
-			x: 4605,
+			x: 4688,
 			y: groundY - 116,
 			w: 40,
 			h: 116,

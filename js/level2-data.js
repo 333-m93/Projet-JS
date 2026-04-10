@@ -34,7 +34,7 @@ export function createLevel2(groundY) {
 	const locks = [
 		{
 			id: "l2-console",
-			x: 4380,
+			x: 4100,
 			y: groundY - 108,
 			w: 36,
 			h: 108,
@@ -48,7 +48,7 @@ export function createLevel2(groundY) {
 		},
 		{
 			id: "l2-maintenance-hatch",
-			x: 4470,
+			x: 4145,
 			y: groundY - 126,
 			w: 38,
 			h: 126,
@@ -62,7 +62,7 @@ export function createLevel2(groundY) {
 		},
 		{
 			id: "l2-tech-door",
-			x: 4615,
+			x: 4192,
 			y: groundY - 140,
 			w: 42,
 			h: 140,

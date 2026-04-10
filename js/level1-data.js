@@ -28,7 +28,7 @@ export function createLevel1(groundY) {
 	const locks = [
 		{
 			id: "l1-dark-passage",
-			x: 3890,
+			x: 3620,
 			y: groundY - 118,
 			w: 38,
 			h: 118,
@@ -42,7 +42,7 @@ export function createLevel1(groundY) {
 		},
 		{
 			id: "l1-service-door",
-			x: 4028,
+			x: 3788,
 			y: groundY - 132,
 			w: 42,
 			h: 132,
