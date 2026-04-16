@@ -6,9 +6,6 @@
 
 body {
 	min-height: 100dvh;
-	display: flex;
-	justify-content: center;
-	align-items: center;
 	overflow: hidden;
 	font-family: Arial, sans-serif;
 	background:
@@ -17,24 +14,12 @@ body {
 }
 
 #game {
-	width: min(100vw, 1100px);
-	height: min(100dvh, 620px);
-	border: 3px solid #2a354a;
-	border-radius: 10px;
+	position: fixed;
+	inset: 0;
+	width: 100vw;
+	height: 100dvh;
+	display: block;
+	border: 0;
 	background: linear-gradient(#5cb9ff, #a7e1ff);
-	box-shadow: 0 22px 60px rgba(0, 0, 0, 0.42);
 }
 
-.info {
-	position: fixed;
-	top: 12px;
-	left: 12px;
-	padding: 9px 12px;
-	background: rgba(6, 10, 18, 0.58);
-	border: 1px solid rgba(145, 200, 255, 0.35);
-	border-radius: 8px;
-	color: #fff;
-	font-size: 14px;
-	letter-spacing: 0.2px;
-	z-index: 2;
-}

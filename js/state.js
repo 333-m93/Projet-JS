@@ -3,6 +3,9 @@ import { createPrisoner } from "./prisoner.js";
 export const canvas = document.getElementById("game");
 export const ctx = canvas.getContext("2d");
 
+canvas.width = 1100;
+canvas.height = 620;
+
 export const keys = new Set();
 export const groundY = 500;
 export const gravity = 0.56;
