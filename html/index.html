@@ -3,11 +3,102 @@
 <head>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>Prison Break</title>
-	<link rel="stylesheet" href="../css/style.css?v=20260410-1" />
+	<title>Prison Escape | Accueil</title>
+	<link rel="stylesheet" href="../css/home.css?v=20260416-3" />
 </head>
-<body>
-	<canvas id="game"></canvas>
-	<script type="module" src="../js/game.js?v=20260410-1"></script>
+<body class="home-page">
+	<main class="home-shell">
+		<section class="hero-card panel-card">
+			<h1>Prison Escape</h1>
+
+			<div class="hero-actions">
+				<a class="primary-button" href="/game">Jouer</a>
+				<a class="secondary-button" href="/rules">Règles</a>
+			</div>
+		</section>
+
+		<aside class="auth-column">
+			<section class="auth-card panel-card" id="auth-panel">
+				<div class="panel-title-block">
+					<h2>Compte joueur</h2>
+				</div>
+
+				<div class="tab-switcher" role="tablist" aria-label="Authentification">
+					<button class="tab-button is-active" type="button" data-tab-target="register-form">Creer un compte</button>
+					<button class="tab-button" type="button" data-tab-target="login-form">Se connecter</button>
+				</div>
+
+				<form class="auth-form" id="register-form" autocomplete="on">
+					<div class="field-grid">
+						<label class="field">
+							<span>Pseudo</span>
+							<input type="text" name="username" placeholder="ex: Runner77" minlength="3" required />
+						</label>
+						<label class="field">
+							<span>Email</span>
+							<input type="email" name="email" placeholder="ex: joueur@mail.com" required />
+						</label>
+					</div>
+					<div class="field-grid">
+						<label class="field">
+							<span>Mot de passe</span>
+							<input type="password" name="password" minlength="6" required />
+						</label>
+						<label class="field">
+							<span>Confirmer</span>
+							<input type="password" name="confirmPassword" minlength="6" required />
+						</label>
+					</div>
+					<button class="primary-button form-button" type="submit">Creer le compte</button>
+				</form>
+
+				<form class="auth-form is-hidden" id="login-form" autocomplete="on">
+					<div class="field-grid single">
+						<label class="field">
+							<span>Pseudo ou email</span>
+							<input type="text" name="identifier" placeholder="Pseudo ou email" required />
+						</label>
+					</div>
+					<div class="field-grid single">
+						<label class="field">
+							<span>Mot de passe</span>
+							<input type="password" name="password" required />
+						</label>
+					</div>
+					<button class="primary-button form-button" type="submit">Se connecter</button>
+				</form>
+
+				<p class="auth-message" data-auth-message></p>
+			</section>
+
+			<section class="session-card panel-card">
+				<div class="panel-title-block compact">
+					<h2>Mon compte</h2>
+				</div>
+
+				<div class="session-summary" data-session-summary>
+					<div>
+						<span class="summary-label">Statut</span>
+						<strong data-session-status>Invité</strong>
+					</div>
+					<div>
+						<span class="summary-label">Derniere connexion</span>
+						<strong data-session-date>--</strong>
+					</div>
+					<div>
+						<span class="summary-label">Profil</span>
+						<strong data-session-profile>Non connecte</strong>
+					</div>
+				</div>
+
+				<div class="session-actions">
+					<a class="primary-button" href="/game">Jouer</a>
+					<a class="secondary-button" href="/rules">Règles</a>
+					<button class="secondary-button" type="button" data-logout-button>Deconnexion</button>
+				</div>
+			</section>
+		</aside>
+	</main>
+	<script type="module" src="../js/home.js?v=20260416-2"></script>
 </body>
 </html>
