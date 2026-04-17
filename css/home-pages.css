@@ -1,0 +1,156 @@
+.landing-actions {
+	position: relative;
+	z-index: 2;
+	display: flex;
+	gap: 14px;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+.play-button,
+.rules-button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 190px;
+	min-height: 58px;
+	padding: 0 24px;
+	text-decoration: none;
+	font-size: 1.02rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	border: 3px solid;
+	transition: transform 120ms steps(2, end), filter 120ms steps(2, end);
+}
+
+.play-button {
+	background: linear-gradient(180deg, #8ad4ff 0%, #4ca2de 100%);
+	border-color: #d7f2ff;
+	color: #051220;
+	box-shadow: 0 7px 0 #1f4b73;
+}
+
+.rules-button {
+	background: linear-gradient(180deg, #1a2c44 0%, #101d31 100%);
+	border-color: #88b9e8;
+	color: var(--px-ink);
+	box-shadow: 0 7px 0 #0a1320;
+}
+
+.play-button:hover,
+.rules-button:hover {
+	transform: translateY(-2px);
+	filter: brightness(1.05);
+}
+
+.play-button:active,
+.rules-button:active {
+	transform: translateY(3px);
+}
+
+.rules-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+}
+
+.rules-actions .primary-button,
+.rules-actions .secondary-button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 52px;
+	padding: 0 20px;
+	text-decoration: none;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	border: 3px solid;
+}
+
+.rules-actions .primary-button {
+	background: linear-gradient(180deg, #8ad4ff 0%, #4ca2de 100%);
+	border-color: #d7f2ff;
+	color: #051220;
+}
+
+.rules-actions .secondary-button {
+	background: linear-gradient(180deg, #1a2c44 0%, #101d31 100%);
+	border-color: #88b9e8;
+	color: var(--px-ink);
+}
+
+@keyframes px-scan {
+	0% {
+		transform: rotate(-11deg);
+	}
+	50% {
+		transform: rotate(12deg);
+	}
+	100% {
+		transform: rotate(-11deg);
+	}
+}
+
+@keyframes px-drift {
+	0% {
+		transform: translateX(-4%);
+	}
+	50% {
+		transform: translateX(4%);
+	}
+	100% {
+		transform: translateX(-4%);
+	}
+}
+
+@keyframes px-drift-rev {
+	0% {
+		transform: translateX(5%);
+	}
+	50% {
+		transform: translateX(-5%);
+	}
+	100% {
+		transform: translateX(5%);
+	}
+}
+
+@media (max-width: 900px) {
+	.tower {
+		opacity: 0.7;
+	}
+
+	.fence {
+		bottom: 13%;
+	}
+}
+
+@media (max-width: 680px) {
+	body.home-page,
+	body.rules-page {
+		overflow: auto;
+	}
+
+	.landing-hero {
+		padding: 20px 14px;
+	}
+
+	.landing-actions,
+	.rules-actions {
+		flex-direction: column;
+		width: 100%;
+	}
+
+	.play-button,
+	.rules-button,
+	.rules-actions .primary-button,
+	.rules-actions .secondary-button {
+		width: 100%;
+	}
+
+	.searchlight {
+		opacity: 0.35;
+	}
+}
