@@ -19,3 +19,4 @@ Technologies utilisées
 HTML
 CSS
 JavaScript
+GO
