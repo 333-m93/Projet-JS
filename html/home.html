@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prison Escape</title>
+    <link rel="stylesheet" href="../css/stylehome.css">
+</head>
+
+<body>
+
+<div class="welcome-screen">
+    <img src="../assets/image/Capture-d’écran-jeu-prisone-escape.png" alt="capture d'ecran du jeu" class="game-screenshot">
+    
+    <div class="overlay">
+        <div class="prison-elements">
+            <div class="bar top-bar"></div>
+            <div class="bar bottom-bar"></div>
+            <div class="chain left-chain"></div>
+            <div class="chain right-chain"></div>
+        </div>
+
+        <div class="welcome-text">
+            <div class="text-bars">
+                <div class="text-bar left"></div>
+
+                <div class="text-content">
+                    <h1>Prison Escape</h1>
+                    <p>Évasion ultime - Sautez, évitez les obstacles, atteignez la liberté !</p>
+
+                    <button class="start-btn" onclick="window.location.href='../html/index.html'">
+                        ⛓️ Commencez l'évasion ⛓️
+                    </button>
+
+                    <!-- 🔥 affichage utilisateur -->
+                    <p id="userDisplay"></p>
+                </div>
+
+                <div class="text-bar right"></div>
+            </div>
+
+            <div class="auth-tabs">
+                <a href="#" class="auth-link" onclick="openLoginModal()">Log in</a>
+                <a href="#" class="auth-link" onclick="openSignupModal()">Create an account</a>
+                <a href="#" class="auth-link">Règle</a>
+                <a href="#" class="auth-link logout" onclick="logout()">Log out</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="signupModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeSignupModal()">&times;</span>
+        <h2>Créer un compte</h2>
+
+        <form id="signupForm">
+            <div class="form-group">
+                <label>Nom d'utilisateur:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+
+            <div class="form-group">
+                <label>Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label>Mot de passe:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+
+            <div class="form-group">
+                <label>Confirmer le mot de passe:</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required>
+            </div>
+
+            <button type="submit" class="submit-btn">Créer un compte</button>
+        </form>
+
+        <p id="signupMessage"></p>
+    </div>
+</div>
+
+<div id="loginModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeLoginModal()">&times;</span>
+        <h2>Connexion</h2>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label>Nom d'utilisateur:</label>
+                <input type="text" id="loginUsername" name="username" required>
+            </div>
+
+            <div class="form-group">
+                <label>Mot de passe:</label>
+                <input type="password" id="loginPassword" name="password" required>
+            </div>
+
+            <button type="submit" class="submit-btn">Se connecter</button>
+        </form>
+
+        <p id="loginMessage"></p>
+    </div>
+</div>
+
+<script src="../js/authentification.js"></script>
+
+</body>
+</html>
