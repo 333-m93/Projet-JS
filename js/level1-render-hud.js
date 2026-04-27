@@ -81,17 +81,6 @@ export function drawStoryHud(ctx, scene, canvas, level) {
 		drawWrappedText(ctx, withSentenceCase(scene.storyToast), 132, canvas.height - 94, canvas.width - 264, 19);
 	}
 
-	if (scene.debugFlyEnabled) {
-		ctx.fillStyle = "rgba(8, 14, 22, 0.72)";
-		ctx.fillRect(canvas.width / 2 - 120, 18, 240, 28);
-		ctx.strokeStyle = "rgba(160, 220, 255, 0.7)";
-		ctx.strokeRect(canvas.width / 2 - 120, 18, 240, 28);
-		ctx.fillStyle = "#e7f6ff";
-		ctx.font = "bold 12px Arial";
-		ctx.textAlign = "center";
-		ctx.fillText("Mode vol actif  -  Fleches pour explorer", canvas.width / 2, 37);
-	}
-
 	if (scene.levelIntroTimer > 0) {
 		const alpha = Math.min(1, scene.levelIntroTimer / 40);
 		ctx.fillStyle = `rgba(5, 10, 18, ${0.72 * alpha})`;

@@ -13,41 +13,7 @@ backgroundMusic.volume = 0.45;
 const levels = createLevels(groundY);
 const drawBackground = createBackgroundRenderer(ctx, canvas, groundY, scene);
 let isMusicUnlocked = false;
-
-function setupHiddenFlyButton() {
-	const button = document.createElement("button");
-	button.type = "button";
-	button.setAttribute("aria-label", "Activer le mode vol");
-	button.title = "Mode vol";
-	button.style.position = "fixed";
-	button.style.top = "8px";
-	button.style.right = "8px";
-	button.style.width = "18px";
-	button.style.height = "18px";
-	button.style.opacity = "0.28";
-	button.style.border = "1px solid rgba(255, 255, 255, 0.35)";
-	button.style.borderRadius = "999px";
-	button.style.background = "rgba(255, 90, 90, 0.22)";
-	button.style.boxShadow = "0 0 10px rgba(255, 90, 90, 0.28)";
-	button.style.padding = "0";
-	button.style.margin = "0";
-	button.style.cursor = "pointer";
-	button.style.zIndex = "30";
-
-	button.addEventListener("click", () => {
-		scene.debugFlyEnabled = !scene.debugFlyEnabled;
-		if (!scene.debugFlyEnabled) {
-			prisoner.vx = 0;
-			prisoner.vy = 0;
-			prisoner.onGround = prisoner.y + prisoner.h >= groundY;
-			if (prisoner.y + prisoner.h >= groundY) {
-				prisoner.y = groundY - prisoner.h;
-			}
-		}
-	});
-
-	document.body.appendChild(button);
-}
+let debugFlyTools = null;
 
 function startBackgroundMusic() {
 	if (isMusicUnlocked) {
@@ -104,13 +70,14 @@ function startLevel(index) {
 	prisoner.vy = 0;
 	prisoner.onGround = true;
 	prisoner.facing = 1;
+	debugFlyTools?.sync(prisoner, groundY);
 }
 
 function loop() {
 	try {
 		let activeLevel = getSafeLevel(levels, scene.currentLevelIndex);
 		scene.activeLevelData = activeLevel.data;
-		const updateResult = updateGame(prisoner, keys, groundY, gravity, scene, canvas, activeLevel.data, activeLevel.applyCollisions);
+		const updateResult = updateGame(prisoner, keys, groundY, gravity, scene, canvas, activeLevel.data, activeLevel.applyCollisions, debugFlyTools);
 		if (updateResult.reachedFinish && scene.currentLevelIndex < levels.length - 1) {
 			startLevel(scene.currentLevelIndex + 1);
 			activeLevel = getSafeLevel(levels, scene.currentLevelIndex);
@@ -118,6 +85,7 @@ function loop() {
 		drawBackground();
 		activeLevel.draw(ctx, scene, canvas, activeLevel.data);
 		drawPrisoner(ctx, prisoner, scene, activeLevel.data);
+		debugFlyTools?.drawOverlay(ctx, canvas);
 		requestAnimationFrame(loop);
 	} catch (error) {
 		console.error(error);
@@ -125,8 +93,22 @@ function loop() {
 	}
 }
 
-startLevel(0);
-setupControls(keys);
-setupHiddenFlyButton();
-startBackgroundMusic();
-loop();
+async function loadDebugFlyTools() {
+	try {
+		const module = await import("./debug-fly.js");
+		return typeof module.createDebugFlyTools === "function" ? module.createDebugFlyTools() : null;
+	} catch {
+		return null;
+	}
+}
+
+async function bootstrap() {
+	debugFlyTools = await loadDebugFlyTools();
+	startLevel(0);
+	setupControls(keys);
+	debugFlyTools?.setup();
+	startBackgroundMusic();
+	loop();
+}
+
+bootstrap();

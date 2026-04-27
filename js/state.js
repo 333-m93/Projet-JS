@@ -16,7 +16,6 @@ export const scene = {
 	activeLevelData: null,
 	worldOffset: 0,
 	sceneTime: 0,
-	debugFlyEnabled: false,
 	checkpointOffset: 0,
 	levelWon: false,
 	pendingLevelAdvance: false,
