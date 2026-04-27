@@ -55,8 +55,6 @@ function startLevel(index) {
 	scene.sceneTime = 0;
 	scene.checkpointOffset = 0;
 	scene.levelWon = false;
-	scene.pendingLevelAdvance = false;
-	scene.levelWinTimer = 0;
 	scene.resetFlash = 0;
 	scene.collectedItemIds = new Set();
 	scene.unlockedLockIds = new Set();
