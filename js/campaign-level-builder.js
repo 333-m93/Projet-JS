@@ -65,7 +65,7 @@ export function createCampaignLevel(baseGroundY, chapterNumber, blueprint) {
 			requiredItemId: itemDef.id,
 			requiredItemLabel: itemDef.label,
 			lockedText: withSentenceCase(`Le verrou reste actif. Sans ${itemDef.label}, cette dalle est mortelle.`),
-			successText: withSentenceCase(`${itemDef.label} fonctionne: la section ${courseIndex + 1} s'efface sous tes pieds.`),
+			successText: withSentenceCase(`${itemDef.label} fonctionne : la section ${courseIndex + 1} s'efface sous tes pieds.`),
 		});
 		hazards.push({ x: trapX - 24, y: baseGroundY - 20, w: trapWidth + 48, h: 40, phase: difficulty + courseIndex * 0.6 });
 		addObstacle(obstacles, {
@@ -94,11 +94,13 @@ export function createCampaignLevel(baseGroundY, chapterNumber, blueprint) {
 	addObstacle(obstacles, { x: cursorX, y: baseGroundY - 28, w: 88, h: 28, type: "concrete" });
 	const exitRunStart = cursorX + 110;
 	const exitPlatformCount = 2 + Math.floor(difficulty / 4);
+	const exitGapReduction = difficulty >= 6 ? 18 + Math.min(12, (difficulty - 6) * 3) : 0;
+	const exitWidthBonus = difficulty >= 6 ? 14 + Math.min(8, difficulty - 6) : 0;
 	for (let i = 0; i < exitPlatformCount; i += 1) {
 		addObstacle(obstacles, {
-			x: exitRunStart + i * (124 + difficulty * 6),
+			x: exitRunStart + i * Math.max(96, 124 + difficulty * 6 - exitGapReduction),
 			y: baseGroundY - blueprint.exitRise - i * 10,
-			w: Math.max(98, 136 - difficulty * 2),
+			w: Math.max(104, 136 - difficulty * 2 + exitWidthBonus),
 			h: 16,
 			type: "catwalk",
 			solid: true,
@@ -137,7 +139,7 @@ export function createCampaignLevel(baseGroundY, chapterNumber, blueprint) {
 		finish: { x: finishX, y: baseGroundY - (132 + Math.floor(difficulty * 2.5)), w: 132, h: 132 + Math.floor(difficulty * 2) },
 		finishTrigger: { x: finishX - 70, y: baseGroundY - (220 + Math.floor(difficulty * 2.5)), w: 280, h: 250 },
 		obstacles,
-		winTitle: `CHAPITRE ${chapterNumber} TERMINE`,
+		winTitle: `Bien joué, niveau ${chapterNumber} validé`,
 		winSubtitle: withSentenceCase(blueprint.winSubtitle),
 	};
 }

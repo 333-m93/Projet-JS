@@ -94,7 +94,7 @@ export function createDebugFlyTools() {
 		ctx.fillStyle = "#e7f6ff";
 		ctx.font = "bold 12px Arial";
 		ctx.textAlign = "center";
-		ctx.fillText("Mode vol actif  -  Fleches pour explorer", canvas.width / 2, 37);
+		ctx.fillText("Mode vol actif  -  Flèches pour explorer", canvas.width / 2, 37);
 	}
 
 	return {

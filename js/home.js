@@ -37,17 +37,17 @@ const password = String(formData.get("password") || "");
 const confirmPassword = String(formData.get("confirmPassword") || "");
 
 if (username.length < 3) {
-feedback.textContent = "Le pseudo doit contenir au moins 3 caracteres.";
+feedback.textContent = "Le pseudo doit contenir au moins 3 caractères.";
 return;
 }
 
 if (!email.includes("@") || !email.includes(".")) {
-feedback.textContent = "L'email doit etre valide.";
+feedback.textContent = "L'e-mail doit être valide.";
 return;
 }
 
 if (password.length < 6) {
-feedback.textContent = "Le mot de passe doit faire au moins 6 caracteres.";
+feedback.textContent = "Le mot de passe doit faire au moins 6 caractères.";
 return;
 }
 
@@ -58,7 +58,7 @@ return;
 
 const users = getUsers();
 if (users.some((user) => normalize(user.username) === username || normalize(user.email) === email)) {
-feedback.textContent = "Ce pseudo ou cet email existe deja.";
+feedback.textContent = "Ce pseudo ou cet e-mail existe déjà.";
 return;
 }
 
@@ -79,7 +79,7 @@ checkpoint: 0,
 users.push(user);
 setUsers(users);
 setSession({ userId: user.id });
-feedback.textContent = `Compte cree: ${user.username}. Tu peux lancer le jeu ou te reconnecter plus tard.`;
+feedback.textContent = `Compte créé : ${user.username}. Tu peux lancer le jeu ou te reconnecter plus tard.`;
 renderSession({ status: sessionStatus, date: sessionDate, profile: sessionProfile }, logoutButton);
 registerForm.reset();
 });
@@ -107,7 +107,7 @@ loginForm.reset();
 
 logoutButton.addEventListener("click", () => {
 clearSession();
-feedback.textContent = "Session fermee.";
+feedback.textContent = "Session fermée.";
 renderSession({ status: sessionStatus, date: sessionDate, profile: sessionProfile }, logoutButton);
 });
 

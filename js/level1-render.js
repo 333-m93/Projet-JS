@@ -58,10 +58,12 @@ export function drawLevel1(ctx, scene, canvas, level) {
 		ctx.fillStyle = "#dff2ff";
 		ctx.font = "bold 28px Arial";
 		ctx.textAlign = "center";
-		ctx.fillText(`VICTOIRE - ${level.winTitle || "ZONE SECURISEE"}`, canvas.width / 2, canvas.height / 2 - 6);
-		ctx.font = "bold 14px Arial";
-		ctx.fillStyle = "#9fd0ff";
-		ctx.fillText(level.winSubtitle || "Niveau termine", canvas.width / 2, canvas.height / 2 + 24);
+		ctx.fillText(`VICTOIRE - ${level.winTitle || "ZONE SÉCURISÉE"}`, canvas.width / 2, canvas.height / 2 - 6);
+		if (level.winSubtitle) {
+			ctx.font = "bold 14px Arial";
+			ctx.fillStyle = "#9fd0ff";
+			ctx.fillText(level.winSubtitle, canvas.width / 2, canvas.height / 2 + 24);
+		}
 	}
 
 	if (scene.resetFlash > 0) {

@@ -11,8 +11,8 @@ export function initTabs(tabButtons, forms, feedback) {
 		}
 
 		feedback.textContent = targetFormId === "register-form"
-			? "Creer un compte local pour preparer la suite avec la base de donnees."
-			: "Connecte-toi avec ton pseudo ou ton email.";
+			? "Créer un compte local pour préparer la suite avec la base de données."
+			: "Connecte-toi avec ton pseudo ou ton e-mail.";
 	}
 
 	for (const button of tabButtons) {
@@ -28,17 +28,17 @@ export function renderSession(summaryNodes, logoutButton) {
 	const currentUser = session ? users.find((user) => user.id === session.userId) : null;
 
 	if (!currentUser) {
-		summaryNodes.status.textContent = "Invite";
+		summaryNodes.status.textContent = "Invité";
 		summaryNodes.date.textContent = "--";
-		summaryNodes.profile.textContent = "Non connecte";
+		summaryNodes.profile.textContent = "Non connecté";
 		logoutButton.disabled = true;
-		logoutButton.textContent = "Deconnexion";
+		logoutButton.textContent = "Déconnexion";
 		return;
 	}
 
-	summaryNodes.status.textContent = "Connecte";
+	summaryNodes.status.textContent = "Connecté";
 	summaryNodes.date.textContent = formatDate(currentUser.lastLoginAt || currentUser.createdAt);
 	summaryNodes.profile.textContent = `${currentUser.username} (${currentUser.email})`;
 	logoutButton.disabled = false;
-	logoutButton.textContent = "Deconnexion";
+	logoutButton.textContent = "Déconnexion";
 }

@@ -21,10 +21,18 @@ export function createMotionProfile(axis, difficulty, stepIndex) {
 	const resolvedAxis = axis === "alternate" ? (stepIndex % 2 === 0 ? "x" : "y") : axis;
 	return {
 		axis: resolvedAxis,
-		amplitude: 10 + Math.min(26, difficulty * 2 + (stepIndex % 3) * 3),
+		amplitude: getMotionAmplitude(resolvedAxis, difficulty, stepIndex),
 		speed: 0.024 + Math.min(0.035, difficulty * 0.002 + stepIndex * 0.0008),
 		phase: stepIndex * 0.75,
 	};
+}
+
+function getMotionAmplitude(axis, difficulty, stepIndex) {
+	const baseAmplitude = 10 + Math.min(26, difficulty * 2 + (stepIndex % 3) * 3);
+	if (difficulty < 6 || axis !== "x") {
+		return baseAmplitude;
+	}
+	return Math.max(10, baseAmplitude - (4 + Math.min(4, difficulty - 6)));
 }
 
 function getCourseStepHeight(pattern, course, index) {
@@ -53,12 +61,51 @@ function getCourseStepHeight(pattern, course, index) {
 	}
 }
 
+function getLateGameGapReduction(pattern, difficulty, index) {
+	if (difficulty < 6) {
+		return 0;
+	}
+
+	const baseReduction = Math.min(26, 12 + (difficulty - 6) * 3);
+	switch (pattern) {
+		case "moving":
+		case "gauntlet":
+			return baseReduction + 8 + (index % 2 === 1 ? 4 : 0);
+		case "sprint":
+		case "zigzag":
+			return baseReduction + 5;
+		case "drop":
+		case "tower":
+			return baseReduction + 2;
+		default:
+			return baseReduction;
+	}
+}
+
+function getLateGameWidthBonus(pattern, difficulty) {
+	if (difficulty < 6) {
+		return 0;
+	}
+
+	switch (pattern) {
+		case "moving":
+		case "gauntlet":
+			return 10 + Math.min(6, difficulty - 6);
+		case "sprint":
+		case "zigzag":
+			return 8 + Math.min(4, difficulty - 6);
+		default:
+			return 6 + Math.min(4, difficulty - 6);
+	}
+}
+
 export function createCoursePlatforms(baseGroundY, course, difficulty, cursorX) {
 	const platforms = [];
 	let worldX = cursorX;
 	for (let i = 0; i < course.count; i += 1) {
-		const width = Math.max(100, course.width - i * (course.widthDecay || 0));
-		const gap = course.gap + (i % 2 === 0 ? 0 : Math.max(8, Math.floor(difficulty * 2.5)));
+		const width = Math.max(100, course.width - i * (course.widthDecay || 0) + getLateGameWidthBonus(course.pattern, difficulty));
+		const gapBoost = i % 2 === 0 ? 0 : Math.max(8, Math.floor(difficulty * 2.5));
+		const gap = Math.max(96, course.gap + gapBoost - getLateGameGapReduction(course.pattern, difficulty, i));
 		worldX += gap;
 		platforms.push({
 			x: worldX,

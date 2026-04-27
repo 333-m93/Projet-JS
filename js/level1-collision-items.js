@@ -16,7 +16,7 @@ export function collectLevelItems(scene, level, playerRect, nextOffset) {
 
 		if (intersects(playerRect, itemRect)) {
 			scene.collectedItemIds.add(item.id);
-			scene.storyToast = withSentenceCase(item.story || `${item.label || "Objet"} recupere`);
+			scene.storyToast = withSentenceCase(item.story || `${item.label || "Objet"} récupéré`);
 			scene.storyToastTimer = 420;
 		}
 	}
@@ -32,7 +32,7 @@ export function autoUnlockTraps(scene, level) {
 		}
 
 		scene.unlockedLockIds.add(lock.id);
-		scene.storyToast = withSentenceCase(lock.successText || "Piege neutralise");
+		scene.storyToast = withSentenceCase(lock.successText || "Piège neutralisé");
 		scene.storyToastTimer = Math.max(scene.storyToastTimer, 240);
 	}
 }
@@ -48,7 +48,7 @@ export function handleTrapCollisions(scene, level, playerRect, nextOffset, groun
 			continue;
 		}
 
-		scene.storyToast = withSentenceCase(lock.lockedText || `Il te faut ${lock.requiredItemLabel || "un outil"} pour neutraliser ce piege.`);
+		scene.storyToast = withSentenceCase(lock.lockedText || `Il te faut ${lock.requiredItemLabel || "un outil"} pour neutraliser ce piège.`);
 		scene.storyToastTimer = Math.max(scene.storyToastTimer, 240);
 		resetToCheckpoint(prisoner, scene, groundY, maxOffset);
 		return true;

@@ -40,12 +40,12 @@ function drawFatalError(error) {
 	ctx.fillStyle = "#ffe3e3";
 	ctx.font = "bold 22px Arial";
 	ctx.textAlign = "left";
-	ctx.fillText("Erreur JavaScript detectee", 110, 160);
+	ctx.fillText("Erreur JavaScript détectée", 110, 160);
 	ctx.fillStyle = "#ffd0d0";
 	ctx.font = "14px Arial";
 	ctx.fillText(error?.message || "Erreur inconnue", 110, 198);
 	ctx.fillText("Recharge la page avec Ctrl+F5.", 110, 228);
-	ctx.fillText("Si le probleme persiste, envoie ce message d'erreur.", 110, 254);
+	ctx.fillText("Si le problème persiste, envoie ce message d'erreur.", 110, 254);
 }
 
 function startLevel(index) {

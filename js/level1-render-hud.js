@@ -60,7 +60,7 @@ export function drawStoryHud(ctx, scene, canvas, level) {
 
 	ctx.fillStyle = "#dff2ff";
 	ctx.font = "bold 12px Arial";
-	ctx.fillText("Indices Recuperes", canvas.width - 232, 40);
+	ctx.fillText("Indices récupérés", canvas.width - 232, 40);
 	ctx.fillStyle = "#a9d4ff";
 	ctx.font = "13px Arial";
 	ctx.fillText(`${collectedItems} / ${totalItems}`, canvas.width - 232, 61);
