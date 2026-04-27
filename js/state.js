@@ -18,8 +18,6 @@ export const scene = {
 	sceneTime: 0,
 	checkpointOffset: 0,
 	levelWon: false,
-	pendingLevelAdvance: false,
-	levelWinTimer: 0,
 	resetFlash: 0,
 	collectedItemIds: new Set(),
 	unlockedLockIds: new Set(),

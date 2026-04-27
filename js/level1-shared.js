@@ -92,12 +92,6 @@ export function ensureSceneLevelState(scene) {
 	if (typeof scene.levelWon !== "boolean") {
 		scene.levelWon = false;
 	}
-	if (typeof scene.pendingLevelAdvance !== "boolean") {
-		scene.pendingLevelAdvance = false;
-	}
-	if (typeof scene.levelWinTimer !== "number") {
-		scene.levelWinTimer = 0;
-	}
 	if (typeof scene.resetFlash !== "number") {
 		scene.resetFlash = 0;
 	}

@@ -1,6 +1,7 @@
 import { updatePrisoner } from "./prisoner.js";
 
 export function updateGame(prisoner, keys, groundY, gravity, scene, canvas, level, applyCollisions) {
+
 	const previousY = prisoner.y;
 	const controlKeys = scene.startSequenceTimer > 0 ? new Set() : keys;
 	updatePrisoner(prisoner, controlKeys, groundY, gravity);

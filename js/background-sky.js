@@ -52,26 +52,29 @@ export function createSkyBackgroundRenderer(ctx, canvas, groundY, scene) {
 
 	return function drawSkyBackground(level = {}) {
 		const chapter = level.chapter || "";
-		const hasRoute = scene.collectedItemIds?.has("l3-route");
+		const sceneType = level.sceneType || "yard";
 		const sky = ctx.createLinearGradient(0, 0, 0, groundY);
-		if (chapter === "Chapitre 3" && hasRoute) {
-			sky.addColorStop(0, "#09111b");
-			sky.addColorStop(0.45, "#22304a");
-			sky.addColorStop(1, "#5e7386");
-		} else if (chapter === "Chapitre 2") {
-			sky.addColorStop(0, "#04070d");
-			sky.addColorStop(0.45, "#121a28");
-			sky.addColorStop(1, "#2f4154");
-		} else {
-			sky.addColorStop(0, "#05070d");
-			sky.addColorStop(0.45, "#162035");
-			sky.addColorStop(1, "#314b63");
-		}
+		const skyPalettes = {
+			yard: ["#05070d", "#162035", "#314b63"],
+			cellblock: ["#04070d", "#121a28", "#2f4154"],
+			workshop: ["#09111b", "#22304a", "#5e7386"],
+			greenhouse: ["#07150f", "#1f3a33", "#4c6f68"],
+			pipes: ["#100a0a", "#2d1b1f", "#53363e"],
+			tunnel: ["#030406", "#10141f", "#252d3f"],
+			rooftop: ["#0a1323", "#233b56", "#587f9b"],
+			railyard: ["#090c11", "#1e2532", "#454f62"],
+			drain: ["#07100f", "#18302d", "#35504d"],
+			perimeter: ["#06080d", "#1a2233", "#4d6177"],
+		};
+		const palette = skyPalettes[sceneType] || skyPalettes.yard;
+		sky.addColorStop(0, palette[0]);
+		sky.addColorStop(0.45, palette[1]);
+		sky.addColorStop(1, palette[2]);
 		ctx.fillStyle = sky;
 		ctx.fillRect(0, 0, canvas.width, groundY);
 
 		drawStars();
-		if (chapter !== "Chapitre 2") {
+		if (sceneType !== "cellblock" && sceneType !== "tunnel") {
 			drawMoon();
 		}
 
@@ -82,7 +85,7 @@ export function createSkyBackgroundRenderer(ctx, canvas, groundY, scene) {
 		ctx.fillRect(0, 220, canvas.width, groundY - 220);
 
 		const cloudOffset = (scene.worldOffset * 0.18) % 520;
-		if (chapter !== "Chapitre 2") {
+		if (sceneType !== "cellblock" && sceneType !== "tunnel" && sceneType !== "workshop") {
 			for (let i = -1; i < 5; i++) {
 				drawCloud(i * 260 - cloudOffset, 132 + (i % 2) * 35, 1.2);
 				drawCloud(i * 320 - cloudOffset * 0.78, 220 + ((i + 1) % 2) * 26, 0.9);
@@ -90,16 +93,32 @@ export function createSkyBackgroundRenderer(ctx, canvas, groundY, scene) {
 		}
 
 		const hillOffset = (scene.worldOffset * 0.3) % 700;
-		if (chapter !== "Chapitre 2") {
+		if (sceneType !== "cellblock" && sceneType !== "tunnel" && sceneType !== "railyard") {
 			for (let i = -1; i < 4; i++) {
 				const baseX = i * 350 - hillOffset;
-				ctx.fillStyle = chapter === "Chapitre 3" ? "#243230" : "#1d2a2e";
+				ctx.fillStyle = sceneType === "greenhouse" || sceneType === "drain" ? "#2a423d" : "#1d2a2e";
 				ctx.beginPath();
 				ctx.moveTo(baseX, groundY);
 				ctx.quadraticCurveTo(baseX + 175, 356, baseX + 350, groundY);
 				ctx.closePath();
 				ctx.fill();
 			}
+		}
+
+		if (sceneType === "pipes" || sceneType === "railyard" || sceneType === "perimeter") {
+			ctx.strokeStyle = "rgba(255, 120, 120, 0.18)";
+			ctx.lineWidth = 2;
+			for (let y = 84; y < groundY - 40; y += 54) {
+				ctx.beginPath();
+				ctx.moveTo(0, y + Math.sin(scene.sceneTime * 0.01 + y) * 6);
+				ctx.lineTo(canvas.width, y + Math.sin(scene.sceneTime * 0.01 + y) * 6);
+				ctx.stroke();
+			}
+		}
+
+		if (sceneType === "tunnel" || sceneType === "drain") {
+			ctx.fillStyle = "rgba(10, 14, 22, 0.4)";
+			ctx.fillRect(0, 0, canvas.width, groundY);
 		}
 	};
 }

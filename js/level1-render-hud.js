@@ -1,3 +1,5 @@
+import { withSentenceCase } from "./display-text.js";
+
 function drawWrappedText(ctx, text, x, y, maxWidth, lineHeight) {
 	const words = String(text || "").split(" ");
 	let line = "";
@@ -37,11 +39,11 @@ export function drawStoryHud(ctx, scene, canvas, level) {
 	ctx.fillStyle = "#d8ecff";
 	ctx.font = "bold 11px Arial";
 	ctx.textAlign = "left";
-	ctx.fillText(`${level.chapter || "Mission"} - ${level.name}`, barX, barY - 24);
+	ctx.fillText(level.name || "Mission", barX, barY - 24);
 
 	ctx.fillStyle = "#b4d9ff";
 	ctx.font = "13px Arial";
-	ctx.fillText(level.objective || "Avance et trouve la sortie.", barX, barY - 6);
+	ctx.fillText(withSentenceCase(level.objective || "Avance et trouve la sortie."), barX, barY - 6);
 
 	ctx.fillStyle = "rgba(8, 12, 20, 0.55)";
 	ctx.fillRect(barX, barY, barW, 18);
@@ -58,7 +60,7 @@ export function drawStoryHud(ctx, scene, canvas, level) {
 
 	ctx.fillStyle = "#dff2ff";
 	ctx.font = "bold 12px Arial";
-	ctx.fillText("Indices recuperes", canvas.width - 232, 40);
+	ctx.fillText("Indices récupérés", canvas.width - 232, 40);
 	ctx.fillStyle = "#a9d4ff";
 	ctx.font = "13px Arial";
 	ctx.fillText(`${collectedItems} / ${totalItems}`, canvas.width - 232, 61);
@@ -76,7 +78,7 @@ export function drawStoryHud(ctx, scene, canvas, level) {
 		ctx.fillStyle = "#ecf7ff";
 		ctx.font = "13px Arial";
 		ctx.textAlign = "left";
-		drawWrappedText(ctx, scene.storyToast, 132, canvas.height - 94, canvas.width - 264, 19);
+		drawWrappedText(ctx, withSentenceCase(scene.storyToast), 132, canvas.height - 94, canvas.width - 264, 19);
 	}
 
 	if (scene.levelIntroTimer > 0) {
@@ -88,11 +90,11 @@ export function drawStoryHud(ctx, scene, canvas, level) {
 		ctx.fillStyle = `rgba(233, 246, 255, ${alpha})`;
 		ctx.font = "bold 22px Arial";
 		ctx.textAlign = "center";
-		ctx.fillText(level.chapter || "Nouveau chapitre", canvas.width / 2, 154);
+		ctx.fillText(level.name || "Nouveau niveau", canvas.width / 2, 154);
 		ctx.font = "14px Arial";
 		ctx.fillStyle = `rgba(180, 220, 255, ${alpha})`;
 		ctx.textAlign = "left";
-		drawWrappedText(ctx, level.introText || "", canvas.width / 2 - 242, 184, 484, 20);
+		drawWrappedText(ctx, withSentenceCase(level.introText || ""), canvas.width / 2 - 242, 184, 484, 20);
 		scene.levelIntroTimer = Math.max(0, scene.levelIntroTimer - 1);
 	}
 }
