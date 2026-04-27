@@ -23,6 +23,9 @@ Le joueur controle un prisonnier qui doit progresser dans le niveau, eviter les 
 - Rendu 2D canvas avec scene dynamique
 - Ecran d accueil avec authentification locale
 - Systeme de victoire et de defaite
+- Systeme de niveau
+- Son avec le jeu
+- Niveau du jeu crescendo (difficulte progressive)
 
 ## Technologies
 
