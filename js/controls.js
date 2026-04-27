@@ -1,6 +1,6 @@
 export function setupControls(keys) {
 	window.addEventListener("keydown", (event) => {
-		if (["ArrowLeft", "ArrowRight", "ArrowUp", " "].includes(event.key)) {
+		if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", " "].includes(event.key)) {
 			event.preventDefault();
 			keys.add(event.key);
 		}

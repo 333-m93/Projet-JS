@@ -1,3 +1,4 @@
+import { withSentenceCase } from "./display-text.js";
 import { getLockTrapRect, getHazardRect, intersects, resetToCheckpoint } from "./level1-shared.js";
 
 export function collectLevelItems(scene, level, playerRect, nextOffset) {
@@ -15,7 +16,7 @@ export function collectLevelItems(scene, level, playerRect, nextOffset) {
 
 		if (intersects(playerRect, itemRect)) {
 			scene.collectedItemIds.add(item.id);
-			scene.storyToast = item.story || `${item.label || "Objet"} recupere`;
+			scene.storyToast = withSentenceCase(item.story || `${item.label || "Objet"} recupere`);
 			scene.storyToastTimer = 420;
 		}
 	}
@@ -31,7 +32,7 @@ export function autoUnlockTraps(scene, level) {
 		}
 
 		scene.unlockedLockIds.add(lock.id);
-		scene.storyToast = lock.successText || "Piege neutralise";
+		scene.storyToast = withSentenceCase(lock.successText || "Piege neutralise");
 		scene.storyToastTimer = Math.max(scene.storyToastTimer, 240);
 	}
 }
@@ -47,7 +48,7 @@ export function handleTrapCollisions(scene, level, playerRect, nextOffset, groun
 			continue;
 		}
 
-		scene.storyToast = lock.lockedText || `Il te faut ${lock.requiredItemLabel || "un outil"} pour neutraliser ce piege.`;
+		scene.storyToast = withSentenceCase(lock.lockedText || `Il te faut ${lock.requiredItemLabel || "un outil"} pour neutraliser ce piege.`);
 		scene.storyToastTimer = Math.max(scene.storyToastTimer, 240);
 		resetToCheckpoint(prisoner, scene, groundY, maxOffset);
 		return true;

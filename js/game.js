@@ -2,73 +2,66 @@ import { drawPrisoner } from "./prisoner.js";
 import { createBackgroundRenderer } from "./background.js";
 import { setupControls } from "./controls.js";
 import { updateGame } from "./update.js";
-import { createLevel1, drawLevel1, applyLevel1Collisions } from "./level1.js";
-import { createLevel2, drawLevel2, applyLevel2Collisions } from "./level2.js";
-import { createLevel3, drawLevel3, applyLevel3Collisions } from "./level3.js";
+import { createLevels, getSafeLevel } from "./campaign-levels.js";
 import { canvas, ctx, keys, groundY, gravity, prisoner, scene } from "./state.js";
 
-const backgroundMusic = new Audio(
-	new URL("../song/1 HOUR - Emergency Base ALARM.mp3", import.meta.url),
-);
+const backgroundMusic = new Audio(new URL("../song/1 HOUR - Emergency Base ALARM.mp3", import.meta.url));
 backgroundMusic.loop = true;
 backgroundMusic.preload = "auto";
 backgroundMusic.volume = 0.45;
 
+const levels = createLevels(groundY);
+const drawBackground = createBackgroundRenderer(ctx, canvas, groundY, scene);
 let isMusicUnlocked = false;
+
+function setupHiddenFlyButton() {
+	const button = document.createElement("button");
+	button.type = "button";
+	button.setAttribute("aria-label", "Activer le mode vol");
+	button.title = "Mode vol";
+	button.style.position = "fixed";
+	button.style.top = "8px";
+	button.style.right = "8px";
+	button.style.width = "18px";
+	button.style.height = "18px";
+	button.style.opacity = "0.28";
+	button.style.border = "1px solid rgba(255, 255, 255, 0.35)";
+	button.style.borderRadius = "999px";
+	button.style.background = "rgba(255, 90, 90, 0.22)";
+	button.style.boxShadow = "0 0 10px rgba(255, 90, 90, 0.28)";
+	button.style.padding = "0";
+	button.style.margin = "0";
+	button.style.cursor = "pointer";
+	button.style.zIndex = "30";
+
+	button.addEventListener("click", () => {
+		scene.debugFlyEnabled = !scene.debugFlyEnabled;
+		if (!scene.debugFlyEnabled) {
+			prisoner.vx = 0;
+			prisoner.vy = 0;
+			prisoner.onGround = prisoner.y + prisoner.h >= groundY;
+			if (prisoner.y + prisoner.h >= groundY) {
+				prisoner.y = groundY - prisoner.h;
+			}
+		}
+	});
+
+	document.body.appendChild(button);
+}
 
 function startBackgroundMusic() {
 	if (isMusicUnlocked) {
 		return;
 	}
-
-	backgroundMusic
-		.play()
-		.then(() => {
+	backgroundMusic.play().then(() => {
+		isMusicUnlocked = true;
+	}).catch(() => {
+		const unlockMusic = () => backgroundMusic.play().then(() => {
 			isMusicUnlocked = true;
-		})
-		.catch(() => {
-			const unlockMusic = () => {
-				backgroundMusic
-					.play()
-					.then(() => {
-						isMusicUnlocked = true;
-					})
-					.catch(() => {
-						/* ignore autoplay rejections until next interaction */
-					});
-			};
-
-			window.addEventListener("keydown", unlockMusic, { once: true });
-			window.addEventListener("pointerdown", unlockMusic, { once: true });
-		});
-}
-
-const drawBackground = createBackgroundRenderer(ctx, canvas, groundY, scene);
-const levels = [
-	{
-		data: createLevel1(groundY),
-		draw: drawLevel1,
-		applyCollisions: applyLevel1Collisions,
-	},
-	{
-		data: createLevel2(groundY),
-		draw: drawLevel2,
-		applyCollisions: applyLevel2Collisions,
-	},
-	{
-		data: createLevel3(groundY),
-		draw: drawLevel3,
-		applyCollisions: applyLevel3Collisions,
-	},
-];
-
-function getActiveLevel() {
-	const index = Number.isInteger(scene.currentLevelIndex) ? scene.currentLevelIndex : 0;
-	const level = levels[index] || levels[0];
-	if (!level || !level.data || typeof level.draw !== "function" || typeof level.applyCollisions !== "function") {
-		return levels[0];
-	}
-	return level;
+		}).catch(() => {});
+		window.addEventListener("keydown", unlockMusic, { once: true });
+		window.addEventListener("pointerdown", unlockMusic, { once: true });
+	});
 }
 
 function drawFatalError(error) {
@@ -78,23 +71,20 @@ function drawFatalError(error) {
 	ctx.strokeStyle = "#ff9b9b";
 	ctx.lineWidth = 2;
 	ctx.strokeRect(80, 110, canvas.width - 160, 210);
-
 	ctx.fillStyle = "#ffe3e3";
 	ctx.font = "bold 22px Arial";
 	ctx.textAlign = "left";
 	ctx.fillText("Erreur JavaScript detectee", 110, 160);
-
 	ctx.fillStyle = "#ffd0d0";
 	ctx.font = "14px Arial";
-	const message = error?.message || "Erreur inconnue";
-	ctx.fillText(message, 110, 198);
+	ctx.fillText(error?.message || "Erreur inconnue", 110, 198);
 	ctx.fillText("Recharge la page avec Ctrl+F5.", 110, 228);
 	ctx.fillText("Si le probleme persiste, envoie ce message d'erreur.", 110, 254);
 }
 
 function startLevel(index) {
 	scene.currentLevelIndex = index;
-	scene.activeLevelData = levels[index]?.data || levels[0].data;
+	scene.activeLevelData = getSafeLevel(levels, index).data;
 	scene.worldOffset = 0;
 	scene.sceneTime = 0;
 	scene.checkpointOffset = 0;
@@ -108,7 +98,6 @@ function startLevel(index) {
 	scene.storyToastTimer = 0;
 	scene.levelIntroTimer = 420;
 	scene.startSequenceTimer = index === 0 ? 220 : 0;
-
 	prisoner.x = index === 0 ? 122 : 180;
 	prisoner.y = groundY - prisoner.h;
 	prisoner.vx = 0;
@@ -117,28 +106,15 @@ function startLevel(index) {
 	prisoner.facing = 1;
 }
 
-startLevel(0);
-
 function loop() {
 	try {
-		let activeLevel = getActiveLevel();
+		let activeLevel = getSafeLevel(levels, scene.currentLevelIndex);
 		scene.activeLevelData = activeLevel.data;
-		const updateResult = updateGame(
-			prisoner,
-			keys,
-			groundY,
-			gravity,
-			scene,
-			canvas,
-			activeLevel.data,
-			activeLevel.applyCollisions,
-		);
-
+		const updateResult = updateGame(prisoner, keys, groundY, gravity, scene, canvas, activeLevel.data, activeLevel.applyCollisions);
 		if (updateResult.reachedFinish && scene.currentLevelIndex < levels.length - 1) {
 			startLevel(scene.currentLevelIndex + 1);
-			activeLevel = getActiveLevel();
+			activeLevel = getSafeLevel(levels, scene.currentLevelIndex);
 		}
-
 		drawBackground();
 		activeLevel.draw(ctx, scene, canvas, activeLevel.data);
 		drawPrisoner(ctx, prisoner, scene, activeLevel.data);
@@ -149,6 +125,8 @@ function loop() {
 	}
 }
 
+startLevel(0);
 setupControls(keys);
+setupHiddenFlyButton();
 startBackgroundMusic();
 loop();

@@ -1,6 +1,3 @@
 import { campaignBlueprints } from "./campaign-blueprints.js";
 import { createCampaignLevel } from "./campaign-level-builder.js";
-
-export function createLevel3(groundY) {
-	return createCampaignLevel(groundY, 3, campaignBlueprints[2]);
-}
+export function createLevel7(groundY) { return createCampaignLevel(groundY, 7, campaignBlueprints[6]); }
