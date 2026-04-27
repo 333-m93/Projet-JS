@@ -43,6 +43,48 @@ export function getHazardRect(hazard, worldOffset) {
 	};
 }
 
+export function getLockRect(lock, worldOffset) {
+	return {
+		x: lock.x - worldOffset,
+		y: lock.y,
+		w: lock.w,
+		h: lock.h,
+	};
+}
+
+export function getLockTrapRect(lock, worldOffset) {
+	if (lock.type === "ground-trap") {
+		return {
+			x: lock.x - worldOffset,
+			y: lock.y,
+			w: lock.w,
+			h: lock.h,
+		};
+	}
+
+	const trapHeight = Math.max(14, Math.min(26, Math.floor(lock.h * 0.24)));
+	return {
+		x: lock.x - worldOffset,
+		y: lock.y + lock.h - trapHeight,
+		w: lock.w,
+		h: trapHeight,
+	};
+}
+
+export function getLockCollisionRect(lock, worldOffset) {
+	const rect = getLockRect(lock, worldOffset);
+	if (!lock.sealedTop) {
+		return rect;
+	}
+
+	return {
+		x: rect.x,
+		y: 0,
+		w: rect.w,
+		h: rect.y + rect.h,
+	};
+}
+
 export function ensureSceneLevelState(scene) {
 	if (typeof scene.checkpointOffset !== "number") {
 		scene.checkpointOffset = 0;
@@ -50,8 +92,29 @@ export function ensureSceneLevelState(scene) {
 	if (typeof scene.levelWon !== "boolean") {
 		scene.levelWon = false;
 	}
+	if (typeof scene.pendingLevelAdvance !== "boolean") {
+		scene.pendingLevelAdvance = false;
+	}
+	if (typeof scene.levelWinTimer !== "number") {
+		scene.levelWinTimer = 0;
+	}
 	if (typeof scene.resetFlash !== "number") {
 		scene.resetFlash = 0;
+	}
+	if (!(scene.collectedItemIds instanceof Set)) {
+		scene.collectedItemIds = new Set();
+	}
+	if (!(scene.unlockedLockIds instanceof Set)) {
+		scene.unlockedLockIds = new Set();
+	}
+	if (typeof scene.storyToast !== "string") {
+		scene.storyToast = "";
+	}
+	if (typeof scene.storyToastTimer !== "number") {
+		scene.storyToastTimer = 0;
+	}
+	if (typeof scene.levelIntroTimer !== "number") {
+		scene.levelIntroTimer = 0;
 	}
 }
 

@@ -6,10 +6,12 @@ export function createPrisoner(groundY) {
 		h: 62,
 		vx: 0,
 		vy: 0,
-		speed: 0.58,
-		maxSpeed: 4.8,
-		jump: -13,
+		speed: 0.68,
+		maxSpeed: 5.6,
+		jump: -14.2,
 		onGround: true,
+		coyoteTime: 0,
+		jumpBuffer: 0,
 		facing: 1,
 		walkCycle: 0,
 	};
@@ -20,6 +22,18 @@ export function updatePrisoner(prisoner, keys, groundY, gravity) {
 	const right = keys.has("ArrowRight");
 	const jump = keys.has("ArrowUp") || keys.has(" ");
 
+	if (jump) {
+		prisoner.jumpBuffer = 8;
+	} else {
+		prisoner.jumpBuffer = Math.max(0, prisoner.jumpBuffer - 1);
+	}
+
+	if (prisoner.onGround) {
+		prisoner.coyoteTime = 8;
+	} else {
+		prisoner.coyoteTime = Math.max(0, prisoner.coyoteTime - 1);
+	}
+
 	if (left && !right) {
 		prisoner.vx -= prisoner.speed;
 	}
@@ -28,7 +42,7 @@ export function updatePrisoner(prisoner, keys, groundY, gravity) {
 	}
 
 	if (!left && !right) {
-		prisoner.vx *= 0.82;
+		prisoner.vx *= 0.85;
 	}
 
 	if (prisoner.vx > prisoner.maxSpeed) {
@@ -44,9 +58,11 @@ export function updatePrisoner(prisoner, keys, groundY, gravity) {
 		prisoner.facing = -1;
 	}
 
-	if (jump && prisoner.onGround) {
+	if (prisoner.jumpBuffer > 0 && (prisoner.onGround || prisoner.coyoteTime > 0)) {
 		prisoner.vy = prisoner.jump;
 		prisoner.onGround = false;
+		prisoner.coyoteTime = 0;
+		prisoner.jumpBuffer = 0;
 	}
 
 	prisoner.vy += gravity;

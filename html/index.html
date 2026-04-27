@@ -3,12 +3,29 @@
 <head>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>Projet JS</title>
-	<link rel="stylesheet" href="../css/style.css?v=20260319-1" />
+	<title>Prison Escape | Accueil</title>
+	<link rel="stylesheet" href="../css/home.css?v=20260416-5" />
 </head>
-<body>
-	<div class="info">Prisonnier: Flèches ← → pour avancer (↑ ou Espace pour sauter)</div>
-	<canvas id="game" width="1100" height="620"></canvas>
-	<script type="module" src="../js/game.js?v=20260319-1"></script>
+<body class="home-page">
+	<main class="landing-shell">
+		<section class="landing-hero">
+			<div class="scene" aria-hidden="true">
+				<div class="moon"></div>
+				<div class="searchlight"></div>
+				<div class="tower tower-left"></div>
+				<div class="tower tower-right"></div>
+				<div class="fence"></div>
+				<div class="fog fog-back"></div>
+				<div class="fog fog-front"></div>
+			</div>
+			<p class="kicker">PRISON ESCAPE</p>
+			<h1>Prison Escape</h1>
+			<p class="tagline">Traverse la nuit. Evite les pieges. Trouve la sortie.</p>
+			<div class="landing-actions">
+				<a class="play-button" href="/game">Jouer</a>
+				<a class="rules-button" href="/rules">Règles</a>
+			</div>
+		</section>
+	</main>
 </body>
 </html>

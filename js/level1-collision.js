@@ -1,121 +1,78 @@
-import {
-	clamp,
-	ensureSceneLevelState,
-	getHazardRect,
-	getScreenRect,
-	intersects,
-	resetToCheckpoint,
-} from "./level1-shared.js";
+﻿import { clamp, ensureSceneLevelState, resetToCheckpoint } from "./level1-shared.js";
+import { autoUnlockTraps, collectLevelItems, handleHazards, handleTrapCollisions } from "./level1-collision-items.js";
+import { handleDeadlyObstacles, resolveObstacleCollisions } from "./level1-collision-obstacles.js";
 
 export function applyLevel1Collisions(prisoner, scene, canvas, level, groundY, previousY) {
-	ensureSceneLevelState(scene);
+ensureSceneLevelState(scene);
 
-	const minOffset = 0;
-	const maxOffset = Math.max(0, level.length - canvas.width);
-	let nextOffset = Math.max(minOffset, Math.min(maxOffset, scene.worldOffset + prisoner.vx));
+const minOffset = 0;
+const maxOffset = Math.max(0, level.length - canvas.width);
+let nextOffset = Math.max(minOffset, Math.min(maxOffset, scene.worldOffset + prisoner.vx));
 
-	if (scene.levelWon) {
-		scene.worldOffset = clamp(scene.worldOffset, minOffset, maxOffset);
-		scene.resetFlash = Math.max(0, scene.resetFlash - 1);
-		return;
-	}
+if (scene.levelWon) {
+scene.worldOffset = clamp(scene.worldOffset, minOffset, maxOffset);
+scene.levelWinTimer += 1;
+scene.resetFlash = Math.max(0, scene.resetFlash - 1);
+return { reachedFinish: false };
+}
 
-	for (const cp of level.checkpoints) {
-		if (nextOffset >= cp) {
-			scene.checkpointOffset = cp;
-		}
-	}
+for (const cp of level.checkpoints || []) {
+if (nextOffset >= cp) {
+scene.checkpointOffset = cp;
+}
+}
 
-	const playerRect = {
-		x: prisoner.x,
-		y: prisoner.y,
-		w: prisoner.w,
-		h: prisoner.h,
-	};
-	const previousBottom = previousY + prisoner.h;
-	const playerBottom = prisoner.y + prisoner.h;
+const playerRect = {
+x: prisoner.x,
+y: prisoner.y,
+w: prisoner.w,
+h: prisoner.h,
+};
+const previousBottom = previousY + prisoner.h;
 
-	for (const hazardZone of level.hazards) {
-		const hazardRect = getHazardRect(hazardZone, nextOffset);
-		if (intersects(playerRect, hazardRect)) {
-			resetToCheckpoint(prisoner, scene, groundY, maxOffset);
-			return;
-		}
-	}
+if (handleHazards(scene, level, playerRect, nextOffset, groundY, maxOffset, prisoner)) {
+return { reachedFinish: false };
+}
 
-	for (const obstacle of level.obstacles) {
-		if (!obstacle.deadly) {
-			continue;
-		}
-		const rect = getScreenRect(obstacle, nextOffset, scene.sceneTime);
-		if (intersects(playerRect, rect)) {
-			resetToCheckpoint(prisoner, scene, groundY, maxOffset);
-			return;
-		}
-	}
+collectLevelItems(scene, level, playerRect, nextOffset);
+autoUnlockTraps(scene, level);
 
-	for (const obstacle of level.obstacles) {
-		if (!obstacle.solid) {
-			continue;
-		}
-		const rect = getScreenRect(obstacle, nextOffset, scene.sceneTime);
-		if (!intersects(playerRect, rect)) {
-			continue;
-		}
+if (handleTrapCollisions(scene, level, playerRect, nextOffset, groundY, maxOffset, prisoner)) {
+return { reachedFinish: false };
+}
 
-		if (previousBottom <= rect.y + 2 && playerBottom >= rect.y) {
-			prisoner.y = rect.y - prisoner.h;
-			prisoner.vy = 0;
-			prisoner.onGround = true;
-			playerRect.y = prisoner.y;
-			continue;
-		}
+if (handleDeadlyObstacles(scene, level, playerRect, nextOffset, groundY, maxOffset, prisoner)) {
+return { reachedFinish: false };
+}
 
-		if (previousY >= rect.y + rect.h - 2 && prisoner.y < rect.y + rect.h) {
-			prisoner.y = rect.y + rect.h;
-			prisoner.vy = Math.max(0, prisoner.vy);
-			playerRect.y = prisoner.y;
-		}
-	}
+nextOffset = resolveObstacleCollisions(prisoner, level, playerRect, nextOffset, previousY, previousBottom, scene);
 
-	for (const obstacle of level.obstacles) {
-		if (!obstacle.solid) {
-			continue;
-		}
-		const rect = getScreenRect(obstacle, nextOffset, scene.sceneTime);
-		const verticalOverlap = prisoner.y + prisoner.h > rect.y + 4 && prisoner.y < rect.y + rect.h - 4;
-		if (!verticalOverlap) {
-			continue;
-		}
+scene.worldOffset = Math.max(minOffset, Math.min(maxOffset, nextOffset));
+if (prisoner.y > canvas.height + 60) {
+resetToCheckpoint(prisoner, scene, groundY, maxOffset);
+return { reachedFinish: false };
+}
 
-		if (prisoner.vx > 0 && prisoner.x + prisoner.w > rect.x && prisoner.x < rect.x) {
-			nextOffset = rect.worldX - (prisoner.x + prisoner.w);
-			prisoner.vx = 0;
-		}
+const finishRect = {
+x: level.finishTrigger.x - scene.worldOffset,
+y: level.finishTrigger.y,
+w: level.finishTrigger.w,
+h: level.finishTrigger.h,
+};
+if (playerRect.x < finishRect.x + finishRect.w && playerRect.x + playerRect.w > finishRect.x && playerRect.y < finishRect.y + finishRect.h && playerRect.y + playerRect.h > finishRect.y) {
+scene.levelWon = true;
+scene.pendingLevelAdvance = true;
+scene.levelWinTimer = 0;
+prisoner.vx = 0;
+prisoner.vy = 0;
+scene.resetFlash = Math.max(0, scene.resetFlash - 1);
+return { reachedFinish: true };
+}
 
-		if (prisoner.vx < 0 && prisoner.x < rect.x + rect.w && prisoner.x + prisoner.w > rect.x + rect.w) {
-			nextOffset = rect.worldX + rect.w - prisoner.x;
-			prisoner.vx = 0;
-		}
-	}
-
-	scene.worldOffset = Math.max(minOffset, Math.min(maxOffset, nextOffset));
-	if (prisoner.y > canvas.height + 60) {
-		resetToCheckpoint(prisoner, scene, groundY, maxOffset);
-		return;
-	}
-
-	const finishRect = {
-		x: level.finishTrigger.x - scene.worldOffset,
-		y: level.finishTrigger.y,
-		w: level.finishTrigger.w,
-		h: level.finishTrigger.h,
-	};
-	if (intersects(playerRect, finishRect)) {
-		scene.levelWon = true;
-		prisoner.vx = 0;
-		prisoner.vy = 0;
-	}
-
-	scene.resetFlash = Math.max(0, scene.resetFlash - 1);
+scene.storyToastTimer = Math.max(0, scene.storyToastTimer - 1);
+if (scene.storyToastTimer === 0) {
+scene.storyToast = "";
+}
+scene.resetFlash = Math.max(0, scene.resetFlash - 1);
+return { reachedFinish: false };
 }
