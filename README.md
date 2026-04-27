@@ -72,4 +72,4 @@ Ce mecanisme est utile pour une demo, mais ne doit pas etre utilise tel quel en 
 
 ## Auteur
 
-Projet realise dans le cadre d un projet JavaScript/Go.k
+Projet realise dans le cadre d un projet JavaScript/Go.
